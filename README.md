@@ -21,7 +21,7 @@ $aurora->setFiles([
     'index.html'
 ]);
 
-echo $aurora->render();
+echo $aurora->render('layout');
 ```
 For detailed configuration options and advanced features, please refer to the documentation provided.
 
