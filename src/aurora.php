@@ -52,7 +52,7 @@ trait ErrorHandling
             list($startLine, $endLine, $sourceLines) = $this->gettingErrorLinesOccurrence($file, $line);
 
             $errorOccurredIn = [
-                "message" => "Found error: " . $file . " : " . $line,
+                "message" => "Found error: <strong>" . $file . " : " . $line . "</strong>",
                 "error" => [$message],
                 "source" => $this->workingDirectory . $m[1],
                 "startLine" => $startLine,
@@ -114,9 +114,13 @@ trait ErrorHandling
             $line = ": " . $arr["startLine"];
         }
 
+        foreach (['message', 'source', 'phpFile'] as $key) {
+            $arr[$key] = str_replace(workingDirectory, '', $arr[$key]);
+        }
+
         $message =
             "<p>Source of the error is in the file:</p>" .
-            "<p> Found error: " . $arr["source"] . $line . "</p>" .
+            "<p> Found error: <strong>" . $arr["source"] . $line . "</strong></p>" .
             $this->codeLineListing((int)$arr["startLine"], $tplSourceLines) .
             "<p>" . $arr['message'] . "</p>" .
             "<p>" . implode("<br />", $arr['error']) . "</p>" .
