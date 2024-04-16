@@ -1,0 +1,67 @@
+{metadata}
+{$title = "Aurora | Custom Macros"}
+{$description = "Creating Custom Macros in Template Engines"}
+{$keywords = "custom macros, macros, tpl"}
+{/metadata}
+
+{customMacros}
+<h3>Creating Custom Macros in Template Engines</h3>
+<p>Custom macros in a template engine are user-defined functions that allow for extended functionality within templates. They are especially useful for developers who need specific operations that are not part of the standard template engine features.</p>
+
+<h4>Process of Creating Custom Macros:</h4>
+
+<ol>
+    <li>
+        <span class="bold">Defining a Macros Class:</span>
+        <br />
+        The first step is to define a PHP class, typically named <span class="bold">Macros</span>. This class will hold all the custom macro functions that you want to use in your templates.
+    </li>
+    <li>
+        <span class="bold">Implementing an Interface (Optional but Recommended):</span>
+        <br />
+        While not mandatory, implementing an interface for your <span class="bold">Macros</span> class is a good practice. It helps in ensuring that your custom macros adhere to a defined structure and makes the code more manageable.
+    </li>
+    <li>
+        <span class="bold">Adding Functions to the Macros Class:</span>
+        <br />
+        Each macro is a public function within the <span class="bold">Macros</span> class. These functions can perform various tasks such as string manipulation, data processing, etc.
+    </li>
+</ol>
+<span class="info">Example: Creating a Macro for `htmlentities`</span>
+<pre class="language-php">
+    interface IMacros {
+        public function HtmlEntities(string $value): string;
+    }
+
+    class Macros implements IMacros {
+        public function HtmlEntities(string $value): string {
+            return htmlentities($value);
+        }
+    }
+
+    // Usage in Template Engine
+    require_once "../src/aurora.php";
+
+    $templateEngine = new Aurora\Loader([
+        'cache' => '/',
+        'views' => '/'
+    ]);
+
+    $templateEngine->setFiles(['macros.html']);
+    $templateEngine->createCache(true);
+    print $templateEngine->render("layout");
+</pre>
+
+<h4>Key Points in Custom Macro Creation:</h4>
+<ul>
+    <li><span class="bold">Simplicity:</span>The process of creating custom macros is straightforward. Simply define a class and add the desired functions as methods.</li>
+    <li><span class="bold">Customization:</span>This approach allows for a high degree of customization. Developers can create macros that are tailored to the specific needs of their project.</li>
+    <li><span class="bold">Extendibility:</span>Custom macros extend the functionality of the template engine, making it more versatile and powerful.</li>
+    <li><span class="bold">Integration:</span>These macros seamlessly integrate into the existing template engine, providing a cohesive development experience.</li>
+</ul>
+<p>By utilizing custom macros, developers can significantly enhance the capabilities of the template engine, tailoring it to their unique requirements and streamlining the development process.</p>
+{/customMacros}
+
+{body}
+    include{customMacros}
+{/body}

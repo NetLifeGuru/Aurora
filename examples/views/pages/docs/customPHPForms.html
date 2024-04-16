@@ -1,0 +1,154 @@
+{metadata}
+    {$title = "Aurora | Custom PHP forms"}
+    {$description = "PHP Developer's Guide to Customizing Form Templates in the Template Engine"}
+    {$keywords = "custom php forms, tpl"}
+{/metadata}
+
+{customPHPForms}
+<h3>PHP Developer's Guide to Customizing Form Templates in the Template Engine</h3>
+<p>For PHP developers looking to create custom form templates in a more native PHP approach, the template engine offers a flexible method to redefine form elements. This customization allows for greater control and integration with the backend logic.</p>
+
+<h4>Implementing PHP-based Customization:</h4>
+<ol>
+    <li>
+        <span class="bold">Remove the HTML Form Template:</span>
+        <br />
+        <p>
+            If you have an existing `forms.html` with predefined templates for form elements (`Input`, `Textarea`, etc.), you'll need to remove or bypass this file. The template engine first checks for the existence of an HTML template file, then looks for a PHP method, and finally falls back to the default template if neither is found.
+        </p>
+    </li>
+
+    <li>
+        <span class="bold">Define PHP Functions for Form Elements:</span>
+        <br />
+        <p>
+            Use the template engine's methods (`Input`, `Textarea`, `Checkbox`, `Select`, `Radio`) to define custom rendering functions for each form element. These functions should return the HTML string for the respective form element.
+        </p>
+    </li>
+</ol>
+
+<h4>Example Implementations:</h4>
+
+<span class="info">Customizing the Input Element:</span>
+<pre class="language-php">
+    $templateEngine->Input(function ($attr) {
+        $html = '';
+        if ($attr['isHidden']) {
+            $html .= '<input type="hidden" ' . $attr['chain'] . '>';
+        } else {
+            $html .= '<div class="form-control form-input' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
+            $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
+            $html .= '<input ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' >';
+            if ($attr['isInvalid'] && !empty($attr['error'])) {
+                $html .= '<span class="error">' . $attr['error'] . '</span>';
+            }
+
+            if ($attr['info'] ?? false) {
+                $html .= '<span class="info">' . $attr['info'] . '</span>';
+            }
+            $html .= '</div>';
+        }
+
+        return $html;
+    });
+</pre>
+<span class="info">Customizing the Textarea Element:</span>
+<pre class="language-php">
+    $templateEngine->Textarea(function ($attr) {
+        $html = '<div class="form-control form-textarea' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
+        $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
+        $html .= '<textarea ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' >' . $attr['value'] . '</textarea>';
+        if ($attr['isInvalid'] && !empty($attr['error'])) {
+            $html .= '<span class="error">' . $attr['error'] . '</span>';
+        }
+
+        if ($attr['info'] ?? false) {
+            $html .= '<span class="info">' . $attr['info'] . '</span>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    });
+</pre>
+<span class="info">Customizing the Checkbox Element:</span>
+<pre class="language-php">
+    $templateEngine->Checkbox(function ($attr) {
+        $html = '<div class="form-control form-checkbox' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
+        $html .= '<input type="checkbox" ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' ' . ($attr['isChecked'] ? 'checked' : '') . ' />';
+        $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
+        if ($attr['isInvalid'] && !empty($attr['error'])) {
+            $html .= '<span class="error">' . $attr['error'] . '</span>';
+        }
+
+        if ($attr['info'] ?? false) {
+            $html .= '<span class="info">' . $attr['info'] . '</span>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    });
+</pre>
+<span class="info">Customizing the Select Element:</span>
+<pre class="language-php">
+    $templateEngine->Select(function ($attr) {
+        $html = '<div class="form-control form-select' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
+        $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
+        $html .= '<select type="checkbox" ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' />';
+        if (!empty($attr['data'])) {
+            foreach ($attr['data'] as $value => $title) {
+                $html .= '<option value="' . $value . '" ' . ((!empty($attr['selected']) && $attr['selected'] == $value) ? 'selected' : '') . '>' . $title . '</option>';
+            }
+        }
+        $html .= '</select>';
+        if ($attr['isInvalid'] && !empty($attr['error'])) {
+            $html .= '<span class="error">' . $attr['error'] . '</span>';
+        }
+
+        if ($attr['info'] ?? false) {
+            $html .= '<span class="info">' . $attr['info'] . '</span>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    });
+</pre>
+<span class="info">Customizing the Radio Element:</span>
+<pre class="language-php">
+    $templateEngine->Radio(function ($attr) {
+        $html = '<div class="form-control' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
+
+        $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
+        if (!empty($attr['data'])) {
+            foreach ($attr['data'] as $value => $title) {
+                $html .= '<div class="form-radio">';
+                $html .= '<input name="' . $attr['name'] . '" type="radio" value="' . $value . '" ' . (($attr['selected'] == $value) ? 'checked' : '') . ' />' . $title;
+                $html .= '</div>';
+            }
+        }
+        if ($attr['isInvalid'] && !empty($attr['error'])) {
+            $html .= '<span class="error">' . $attr['error'] . '</span>';
+        }
+
+        if ($attr['info'] ?? false) {
+            $html .= '<span class="info">' . $attr['info'] . '</span>';
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    });
+</pre>
+
+<h4>Customization Process:</h4>
+
+<ul>
+    <li>Define custom rendering logic for each form element within the provided PHP functions.</li>
+    <li>Utilize the attributes passed in the $attr parameter to dynamically generate the form element's HTML structure.</li>
+    <li>Implement custom logic based on the specific needs of your application, like validation, layout, styling, etc.</li>
+</ul>
+
+{/customPHPForms}
+
+{body}
+    include{customPHPForms}
+{/body}

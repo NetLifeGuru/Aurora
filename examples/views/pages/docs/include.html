@@ -1,0 +1,55 @@
+{metadata}
+    {$title = "Aurora | Include & Import"}
+    {$description = "Include vs. Import in the Template Engine"}
+    {$keywords = "include , tpl"}
+{/metadata}
+
+{include}
+<h3>Include vs. Import in the Template Engine</h3>
+<p>In our template engine, you have two distinct ways to integrate content from one block into another: <span class="bold">include</span> and <span class="bold">import</span>. Understanding the difference between these two is crucial for effectively managing the scope of variables and calculations.</p>
+
+<h4>Using `include`</h4>
+<p>The include statement is used to incorporate the content of one block into another without affecting the scope of variables.</p>
+<p>When a block is included, any calculations or variable modifications in that block do not impact the variables in the block where it’s included.</p>
+<p>This ensures that each block maintains its own set of variables, preventing unintended side effects.</p>
+<span class="info">Example include</span>
+<pre class="language-php">
+    {calculate}
+      {$a += 1}
+      {$a} // Output is 2
+    {/calculate}
+
+    {layout}
+      {$a = 1}
+      include{calculate}
+      {$a} // Output remains 1, as {calculate} is included without affecting scope
+    {/layout}
+</pre>
+
+<h4>Using `import`</h4>
+<p>The import statement, in contrast, extends the scope of the imported block to the block where it’s used.</p>
+<p>This means that any variable changes or calculations in the imported block directly affect the variables in the importing block.</p>
+<p>Use import when you want the actions within one block to have a direct impact on another.</p>
+<span class="info">Example import</span>
+<pre class="language-php">
+    {calculate}
+      {$a += 1}
+      {$a} // Output is 2
+    {/calculate}
+
+    {layout}
+      {$a = 1}
+      import{calculate}
+      {$a} // Output changes to 2, as {calculate} affects {layout} through import
+    {/layout}
+</pre>
+
+<p class="georgia">
+    In summary, while include preserves the isolation of variable scopes between blocks, import merges these scopes, allowing for the propagation of variable states and calculations.
+    This feature provides a high degree of flexibility and control over the behavior of your templates, enabling complex interactions while maintaining clarity and manageability.
+</p>
+{/include}
+
+{body}
+    include{include}
+{/body}

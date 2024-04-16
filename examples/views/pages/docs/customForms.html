@@ -1,0 +1,117 @@
+{metadata}
+{$title = "Aurora | Customizing Forms"}
+{$description = "Customizing Forms in the Template Engine"}
+{$keywords = "custom forms, tpl"}
+{/metadata}
+
+{customForms}
+<h3>Customizing Forms in the Template Engine</h3>
+<p>
+    The template engine provides a flexible way to customize form elements according to specific needs, such as aligning with a CSS framework like Bootstrap.
+    This customization allows developers to control the appearance and behavior of form elements like `input`, `textarea`, `select`, `radio`, and `checkbox`.
+</p>
+<h4>Customization Process:</h4>
+<h5>Create a Template File (e.g., forms.html):</h5>
+<p>This file will contain blocks for each form element.</p>
+
+<pre class="language-php">
+    {Input}{/Input}
+    {Textarea}{/Textarea}
+    {Select}{/Select}
+    {Radio}{/Radio}
+    {Checkbox}{/Checkbox}
+</pre>
+
+<h5>Define Custom Layouts for Each Form Element:</h5>
+<p>Customize each form element block to fit the desired design or framework standards. Example for Bootstrap framework:</p>
+
+<span class="info">Bootstrap Input</span>
+<pre class="language-php">
+    {Input}
+    {if $isHidden}
+        <input type="hidden" {$chain}>
+    {else}
+        <div class="form-group {$isInvalid?'invalid':''}">
+            <label for="{$id}">{$label}{$isRequired?'<span class="text-danger">*</span>':''}</label>
+            <input class="form-control" {$chain} {$isRequired?'required':''} {$isReadOnly?'readonly':''}>
+            {if $isInvalid && $error}<small class="form-text text-danger">{$error}</small>{/if}
+            {if $info}<small class="form-text text-muted">{$info}</small>{/if}
+        </div>
+    {/if}
+    {/Input}
+</pre>
+
+<span class="info">Bootstrap Textarea</span>
+<pre class="language-php">
+    {Textarea}
+    <div class="form-group {$isInvalid?'invalid':''}">
+        <label for="{$id}">{$label}{$isRequired?'<span class="text-danger">*</span>':''}</label>
+        <textarea class="form-control" {$chain} {$isRequired?'required':''} {$isReadOnly?'readonly':''}>{$value}</textarea>
+        {if $isInvalid && $error}<small class="form-text text-danger">{$error}</small>{/if}
+        {if $info}<small class="form-text text-muted">{$info}</small>{/if}
+    </div>
+    {/Textarea}
+</pre>
+
+<span class="info">Bootstrap Select</span>
+<pre class="language-php">
+    {Select}
+    <div class="form-group {$isInvalid?'invalid':''}">
+        <label for="{$id}">{$label}{$isRequired?'<span class="text-danger">*</span>':''}</label>
+        <select class="form-control" {$chain} {$isRequired?'required':''} {$isReadOnly?'readonly':''}>
+            {foreach $data as $value => $title}
+            <option value="{$value}" {$selected==$value?'selected':''}>{$title}</option>
+            {/foreach}
+        </select>
+        {if $isInvalid && $error}<small class="form-text text-danger">{$error}</small>{/if}
+        {if $info}<small class="form-text text-muted">{$info}</small>{/if}
+    </div>
+    {/Select}
+</pre>
+
+<span class="info">Bootstrap checkbox</span>
+<pre class="language-php">
+    {Checkbox}
+    <div class="{$isInvalid?'invalid'} form-group">
+        <label for="{$id}"> {$label} {$isRequired?<span class="text-danger">*</span>}</label>
+        {foreach $data as $value => $title}
+        <div class="row">
+            <input class="form-check-input" name="{$name}" type="radio" value="{$value}" {$checked== $value?' checked'}/>
+        </div>
+        {$title}
+        {/foreach}
+        {if $isInvalid && $error}
+        <small class="form-text text-danger">{$error}</small>
+        {/if}
+        {if $info}
+        <small class="form-text text-muted">{$info}</small>
+        {/if}
+    </div>
+    {/Checkbox}
+</pre>
+
+<span class="info">Bootstrap Radio</span>
+<pre class="language-php">
+    {Radio}
+    <div class="{$isInvalid?'invalid'} form-group">
+        <label for="{$id}"> {$label} {$isRequired?<span class="text-danger">*</span>}</label>
+        {foreach $data as $value => $title}
+        <div class="row">
+            <input class="form-check-input" name="{$name}" type="radio" value="{$value}" {$checked== $value?' checked'}/>
+        </div>
+        {$title}
+        {/foreach}
+        {if $isInvalid && $error}
+        <small class="form-text text-danger">{$error}</small>
+        {/if}
+        {if $info}
+        <small class="form-text text-muted">{$info}</small>
+        {/if}
+    </div>
+    {/Radio}
+</pre>
+{/customForms}
+
+{body}
+    include{customForms}
+{/body}

@@ -1,0 +1,33 @@
+{metadata}
+    {$title = "Aurora | Managing Cache Creation"}
+    {$description = "In production environments, it's crucial to manage how caching is handled to ensure optimal server performance."}
+    {$keywords = "cache, tpl"}
+{/metadata}
+
+{cache}
+<h3>Managing Cache Creation</h3>
+<p>
+    In production environments, it's crucial to manage how caching is handled to ensure optimal server performance.
+    By default, the template engine is set to generate a new cache whenever templates are rendered.
+    However, this behavior can be adjusted based on your requirements.
+</p>
+<h4>Disabling Cache Creation</h4>
+<p>
+    To prevent the template engine from generating a new cache with each render, which can be resource-intensive in production environments, you can either remove or modify the `createCache` method call.
+</p>
+<span class="clearfix"></span>
+<ol>
+    <li><span class="bold">Removing Cache Creation Call:</span> Simply remove the line from your code where createCache(true) is called. This will stop the automatic cache generation process.</li>
+    <li><span class="bold">Setting Cache Creation to False:</span> Alternatively, you can explicitly set cache creation to false:</li>
+</ol>
+<span class="clearfix"></span>
+<pre class="language-php">
+    $templateEngine->createCache(false);
+</pre>
+<span class="clearfix"></span>
+<p>This approach explicitly informs the engine not to create new cache files, which can be beneficial in a stable production environment where template changes are infrequent.</p>
+{/cache}
+
+{body}
+    include{cache}
+{/body}

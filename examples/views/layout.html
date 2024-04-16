@@ -1,0 +1,41 @@
+{layout}
+<!DOCTYPE html>
+<html lang="{$lang}">
+<head>
+    import{metadata}
+    <title>{$title}</title>
+    <meta name="description" content="{$description}">
+    <meta name="keywords" content="{$keywords}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <meta property="og:image:alt" content="">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="icon" type="image/x-icon" href="{$domain}assets/images/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="{$domain}assets/images/favicon.ico">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400;1,500&display=swap" rel="stylesheet" />
+    <link href="{$domain}{Version|assets/css/style.css}" rel="stylesheet" />
+    <link href="{$domain}{Version|assets/prism/prism.css}" rel="stylesheet" />
+    <script src="{$domain}{Version|assets/prism/prism.js}"></script>
+
+</head>
+<body>
+    include{header}
+
+    <section class="container">
+        <div class="content">
+            include{body}
+        </div>
+    </section>
+
+    include{footer}
+</body>
+</html>
+{/layout}

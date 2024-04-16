@@ -1,0 +1,68 @@
+{metadata}
+    {$title = "Aurora | Using variables"}
+    {$description = "In your template engine, variables can be used and defined both within the templates and through the PHP code."}
+    {$keywords = "using variables, tpl"}
+{/metadata}
+
+{usingVariables}
+<h3>Using variables</h3>
+<p>In your template engine, variables can be used and defined both within the templates and through the PHP code. Here’s how it works:</p>
+
+<h4>Using Predefined Variables</h4>
+<p>You can set variables using the <span class="bold">`setVariables`</span> method in PHP. These variables are then accessible within the template files. For example:</p>
+
+<pre class="language-php">
+    $templateEngine->setVariables([
+        'lang' => 'en',
+        'title' => 'This is my title',
+    ]);
+</pre>
+<p>In your template, you can use these variables as follows:</p>
+
+<pre class="language-php">
+    {layout}
+        {$lang}  // Outputs: en
+        {$title}  // Outputs: This is my title
+    {/layout}
+</pre>
+
+<h4>Defining New Variables within Templates</h4>
+<p>You can also define new variables directly within your template files. Here’s how you can do it:</p>
+
+<pre class="language-php">
+    {layout}
+       // Defining a simple variable
+       {$a = 1}
+       {$b = 1}
+       {$c = $a + $b}
+       {$c}  // Output will be: 2
+
+       // Defining an array
+       {$arr = [0,1,2,3,4]}
+       {$arr}  // Outputs the array
+    {/layout}
+</pre>
+
+<span class="info">Output:</span>
+<pre class="language-php">
+        Output $c: 2
+        Output $arr:
+        [
+          [0 => 0],
+          [1 => 1],
+          [2 => 2],
+          [3 => 3],
+          [4 => 4]
+        ]
+</pre>
+
+
+<p>In this example, <span class="bold">$a</span> and <span class="bold">$b</span> are simple variables, while <span class="bold">$arr</span> is an array. The <span class="bold">{$c}</span> will output the sum of <span class="bold">$a</span> and <span class="bold">$b</span>, and <span class="bold">{$arr}</span> will output the array structure.</p>
+
+<p>This flexibility allows for dynamic content creation within templates, enhancing the possibilities for customizing the output based on various conditions or inputs.</p>
+
+{/usingVariables}
+
+{body}
+    include{usingVariables}
+{/body}

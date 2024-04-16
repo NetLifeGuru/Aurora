@@ -1,0 +1,83 @@
+{Input}
+{if $isHidden}
+<input type="hidden" {$chain}>
+{else}
+<div class="{$isInvalid?'invalid'} form-group">
+    <label for="{$id}"> {$label} {$isRequired?<span class="text-danger">*</span>}</label>
+    <input class="form-control" {$chain} {$isRequired?' required'} {$isReadOnly?' readonly'}>
+
+    {if $isInvalid && $error}
+    <small class="form-text text-danger">{$error}</small>
+    {/if}
+    {if $info}
+    <small class="form-text text-muted">{$info}</small>
+    {/if}
+</div>
+{/if}
+{/Input}
+
+{Textarea}
+<div class="{$isInvalid?'invalid'} form-group">
+    <label for="{$id}"> {$label} {$isRequired?<span class="text-danger">*</span>}</label>
+    <textarea id="{$id}" class="form-control" {$chain} {$isRequired?' required'} {$isReadOnly?'
+    readonly'}>{$value}</textarea>
+
+    {if $isInvalid && $error}
+    <small class="form-text text-danger">{$error}</small>
+    {/if}
+    {if $info}
+    <small class="form-text text-muted">{$info}</small>
+    {/if}
+</div>
+{/Textarea}
+
+{Select}
+<div class="{$isInvalid?'invalid'} form-group">
+    <label for="{$id}"> {$label} {$isRequired?<span class="text-danger">*</span>}</label>
+    <select class="form-control" type="checkbox" {$chain} {$isRequired?' required'} {$isReadOnly?' readonly'}>
+    {foreach $data as $value => $title}
+    <option value="{$value}" {$selected==$value?' selected
+    '}>{$title}</option>
+    {/foreach}
+    </select>
+
+    {if $isInvalid && $error}
+    <small class="form-text text-danger">{$error}</small>
+    {/if}
+    {if $info}
+    <small class="form-text text-muted">{$info}</small>
+    {/if}
+</div>
+{/Select}
+
+{Radio}
+<div class="{$isInvalid?'invalid'} form-group">
+    <label for="{$id}"> {$label} {$isRequired?<span class="text-danger">*</span>}</label>
+    {foreach $data as $value => $title}
+    <div class="row">
+        <input class="form-check-input" name="{$name}" type="radio" value="{$value}" {$checked== $value?' checked'}/>
+    </div>
+    {$title}
+    {/foreach}
+    {if $isInvalid && $error}
+    <small class="form-text text-danger">{$error}</small>
+    {/if}
+    {if $info}
+    <small class="form-text text-muted">{$info}</small>
+    {/if}
+</div>
+{/Radio}
+
+{Checkbox}
+<div class="{$isInvalid?'invalid'} form-group">
+    <input class="form-check-input" type="checkbox" {$chain} {$isRequired?' required'} {$isReadOnly?' readonly'}
+    {$isChecked?' checked'}/>
+    <label for="{$id}"> {$label} {$isRequired?<span class="asterisk">*</span>}</label>
+    {if $isInvalid && $error}
+    <small class="form-text text-muted">{$error}</small>
+    {/if}
+    {if $info}
+    <small class="form-text text-muted">{$info}</small>
+    {/if}
+</div>
+{/Checkbox}

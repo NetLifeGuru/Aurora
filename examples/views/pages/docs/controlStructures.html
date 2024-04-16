@@ -1,0 +1,68 @@
+{metadata}
+    {$title = "Aurora | Control Structures"}
+    {$description = "Control Structures in the template engine provide a powerful way to control the flow of rendering based on conditions."}
+    {$keywords = "Control Structures, tpl"}
+{/metadata}
+
+{controlStructures}
+<h3>Control Structures in the Template Engine</h3>
+
+<h4>`if`, `else if`, `else`</h4>
+<p>The <span class="bold">`if`</span>, <span class="bold">`else if`</span>, <span class="bold">`else`</span> control structures in the template engine provide a powerful way to control the flow of rendering based on conditions. This flexibility is key in creating dynamic templates that respond to varying data conditions.</p>
+
+<ul>
+    <li><span class="bold">if:</span> This is the primary conditional statement. It evaluates an expression, and if the expression is true, the code within the <span class="bold">{{if}}...{{/if}}</span> block is executed. For example, <span class="bold">{{if $a == $b}}</span> checks if <span class="bold">$a</span> is equal to <span class="bold">$b</span>.</li>
+    <li><span class="bold">else if:</span> This offers an alternate condition to if. It is evaluated only if the preceding <span class="bold">`if`</span> (or another else if) condition fails. It allows for multiple conditional checks within the same <span class="bold">`if`</span> structure.</li>
+    <li><span class="bold">else:</span> This acts as the default block of code that executes when none of the preceding if or else if conditions are met. It’s a catch-all for scenarios where all other conditions are false.</li>
+</ul>
+
+<pre class="language-php">
+    {layout}
+        {$a = "1"}
+        {$b = "1"}
+        {$c = "2"}
+
+        {if $a == $b}
+            $a is equal to $b
+        {else if $a == $c}
+            $a is equal to $c
+        {else}
+            $a is not equal to $b nor $c
+        {/if}
+    {/layout}
+</pre>
+
+<p>The proper closure of these blocks with {{/if}} is crucial for the correct functioning of the template logic.</p>
+
+<h4>Foreach</h4>
+<p><span class="bold">foreach</span> in this template engine is especially useful for iterating over arrays and objects. It's used to loop through each element in a collection, rendering HTML or other template code for each item.</p>
+
+<ul>
+    <li>The syntax <span class="bold">{{foreach $array as $key => $value}}</span> loops through the array <span class="bold">$array</span>. For each iteration, the current element's key and value are assigned to <span class="bold">$key</span> and <span class="bold">$value</span>, respectively.</li>
+    <li>This structure is ideal for displaying items in lists, tables, or any repeating pattern. It simplifies the task of rendering complex data structures into user-friendly formats.</li>
+    <li>Closing the loop with <span class="bold">{{/foreach}}</span> is necessary to define the end of the iteration block.</li>
+</ul>
+
+<pre class="language-php">
+    {layout}
+        {$arr = [0 => "A", 1 => "B", 2 => "C"]}
+
+        <ul>
+        {foreach $arr as $key => $value}
+            <li>Key: {$key} Value: {$value}</li>
+        {/foreach}
+        </ul>
+    {/layout}
+</pre>
+
+<p>
+    In summary, these control structures bring logical and iterative processing capabilities into the templating engine, akin to standard PHP, but with a syntax that is streamlined for template design.
+    They play a vital role in building templates that are both dynamic and efficient in responding to different data scenarios
+</p>
+
+{/controlStructures}
+
+
+{body}
+    include{controlStructures}
+{/body}

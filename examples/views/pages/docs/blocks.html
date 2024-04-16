@@ -1,0 +1,100 @@
+{metadata}
+    {$title = "Aurora | Block Based template engine"}
+    {$description = "Before diving into specifics, it's essential to understand that this template engine operates on a 'block-based' architecture."}
+    {$keywords = "blocks, block based template engine, tpl"}
+{/metadata}
+
+{blockBased}
+<h3>Block Based template engine</h3>
+<p>
+    Before diving into specifics, it's essential to understand that this template engine operates on a "block-based" architecture.
+    Unlike traditional file-based template systems, where each template corresponds to a complete file, a block-based system segments the templates into various blocks within the same file.
+    These blocks can be independently assembled and reused, offering greater flexibility and modularity.
+    This approach is particularly advantageous for creating complex layouts and components that can be easily managed and integrated into different parts of a web application.
+    The following examples will illustrate how this block-based system works in practice.
+</p>
+
+<h4>Components</h4>
+<p>
+    In this scenario, the template engine differs from traditional file-based systems by adopting a "block-based" structure. In this structure, HTML or tpl files consist of various blocks that can be independently combined. For instance:
+</p>
+<span class="info">In `index.html`:</span>
+<pre class="language-html">
+    {header}
+        <h1>This is the header</h1>
+    {/header}
+
+    {content}
+        <p>Hello World</p>
+    {/content}
+
+    {layout}
+        <html>
+            <header>
+                ...
+            </header>
+            <body>
+
+
+            include{header}
+
+            This is the layout
+
+            include{content}
+            include{content}
+            include{content}
+
+            </body>
+        </html>
+    {/layout}
+</pre>
+<p>The output block is chosen as 'layout' because it is called in the function:</p>
+
+<pre class="language-php">
+    print $templateEngine->render("layout");
+</pre>
+
+<p>However, any block can be invoked like this, potentially to return a snippet for AJAX applications. This flexible system allows for more modular and reusable code, particularly useful for web coders who later hand off templates to developers.</p>
+
+<h4>Multiple templates</h4>
+<p>
+    When the template engine processes multiple HTML or template files, it's important to be aware of how it handles blocks with the same name.
+    If different files contain blocks with identical names, these blocks will be merged into a single unit in the output.
+    For example, consider the following scenario with two different files:
+</p>
+
+<span class="info">articles.html contains:</span>
+<pre class="language-html">
+    {content}
+        <h2>Articles</h2>
+    {/content}
+</pre>
+
+<span class="info">products.html contains:</span>
+<pre class="language-html">
+    {content}
+        <h2>Products</h2>
+    {/content}
+</pre>
+
+<p>In this case, the <span class="bold">`content block`</span> from both files will be combined into one, which might lead to unexpected results.</p>
+
+<p>To prevent such issues and maintain control over the layout, it's crucial to:</p>
+
+<span class="clearfix"></span>
+
+<ul>
+    <li><span class="bold">Use unique names for blocks</span> across different template files to avoid unintended merging.</li>
+    <li><span class="bold">Carefully manage the files you load</span>into the template engine, ensuring only the necessary templates for a particular context or page are included.</li>
+</ul>
+
+<span class="clearfix"></span>
+
+<p>
+    This way, you can maintain a clean, organized template structure, allowing for precise control over the rendered output on your web pages.
+</p>
+{/blockBased}
+
+{body}
+    include{blockBased}
+{/body}

@@ -1,0 +1,229 @@
+{metadata}
+    {$title = "Aurora | Forms"}
+    {$description = "Creating Forms in the Template Engine"}
+    {$keywords = "forms, tpl"}
+{/metadata}
+
+{forms}
+<h3>Creating Forms in the Template Engine</h3>
+<p>
+    The template engine simplifies the creation of forms by providing basic form elements like <span class="bold">INPUT</span>, <span class="bold">TEXTAREA</span>, <span class="bold">SELECT</span>, <span class="bold">CHECKBOX</span>, and <span class="bold">RADIO</span>. These elements can be easily used and customized within templates.
+</p>
+
+<h4>Key Attributes for Form Elements:</h4>
+<ul>
+    <li><span class="bold">isInvalid:</span> Marks the form element as invalid (typically used for validation feedback).</li>
+    <li><span class="bold">isRequired:</span> Indicates that the element is required and must be filled out.</li>
+    <li><span class="bold">isHidden:</span> Hides the element (useful for storing non-visible data).</li>
+    <li><span class="bold">isReadOnly:</span> Makes the element read-only.</li>
+    <li><span class="bold">isChecked:</span> Specifically for checkboxes, denotes whether the box is checked by default.</li>
+</ul>
+<h4>Other attributes include:</h4>
+<ul>
+    <li><span class="bold">id:</span> The HTML id attribute.</li>
+    <li><span class="bold">class:</span> CSS class for styling.</li>
+    <li><span class="bold">label:</span> The label of the form element.</li>
+    <li><span class="bold">error:</span> The message displayed when isInvalid is set.</li>
+    <li><span class="bold">type:</span> Specifies the type of input (e.g., text, email).</li>
+    <li><span class="bold">value:</span> The value of the element.</li>
+    <li><span class="bold">title:</span> HTML title attribute.</li>
+    <li><span class="bold">placeholder:</span> Placeholder text.</li>
+    <li><span class="bold">info:</span> Additional information about the element, shown as a hint to the user.</li>
+    <li><span class="bold">selected:</span> For SELECT elements, marks an option as selected.</li>
+    <li><span class="bold">checked:</span> For RADIO buttons and CHECKBOXES, indicates the checked state.</li>
+    <li><span class="bold">data:</span> Custom data attributes.</li>
+    <li><span class="bold">aria-</span>label: Accessibility label.</li>
+    <li><span class="bold">rel:</span> HTML rel attribute.</li>
+</ul>
+
+<h4>Usage of `input` in Template Engine</h4>
+<span class="info">Example Usage of <span class="bold">`input`</span> Element:</span>
+<pre class="language-php">
+    {input
+        id="inputId"
+        type="text"
+        label="`INPUT TEST`"
+        name='input_test'
+        error="`Wrong filled variable!`"
+        value=""
+        placeholder="`Test`"
+        title="Title"
+        info="`Short info message`"
+        isRequired}
+</pre>
+<h4>Explanation of Attributes in the input Element:</h4>
+
+<span class="info">Output</span>
+<span class="html-example">
+    {input
+        id="inputId"
+        type="text"
+        label="`INPUT TEST`"
+        name='input_test'
+        error="`Wrong filled variable!`"
+        value=""
+        placeholder="`Test`"
+        title="Title"
+        info="`Short info message`"
+        isRequired}
+    </span>
+
+<h4>Usage of `textarea` in Template Engine</h4>
+<p>The textarea element in the template engine is used for multi-line text input and can be customized with a range of attributes for flexibility and functionality.</p>
+<span class="info">Textarea</span>
+<pre class="language-php">
+    {textarea
+        id="inputId"
+        type="text"
+        label="`TEXTAREA TEST`"
+        name='input_test'
+        error="`Wrong filled variable!`"
+        value=""
+        placeholder="`Test`"
+        rows="5"
+        cols="70"
+        title="Title"
+        info="`Short info message`"
+        isRequired}
+</pre>
+
+<span class="info">Output</span>
+<span class="html-example">
+    {textarea
+        id="inputId"
+        type="text"
+        label="`TEXTAREA TEST`"
+        name='input_test'
+        error="`Wrong filled variable!`"
+        value=""
+        placeholder="`Test`"
+        rows="5"
+        cols="70"
+        title="Title"
+        info="`Short info message`"
+        isRequired}
+    </span>
+
+<h4>Usage of `checkbox` in Template Engine</h4>
+<p>The `checkbox` element in the template engine provides a straightforward way to include checkbox options in your forms, customizable with several attributes.</p>
+<span class="info">Checkbox:</span>
+<pre class="language-php">
+    {checkbox
+        label="Check Me"
+        name='checkbox_test'
+        selected='1'
+        placeholder="test"
+        info="Short info message"
+        error="`ERROR`"
+        isInvalid
+        isChecked
+        isRequired}
+</pre>
+
+<span class="info">Output</span>
+<span class="html-example">
+        {checkbox
+            label="Check Me"
+            name='checkbox_test'
+            selected='1'
+            placeholder="test"
+            info="Short info message"
+            error="`ERROR`"
+            isChecked
+            isRequired}
+    </span>
+
+<h4>Usage of `select` in Template Engine</h4>
+<p>The `select` element in the template engine is used for creating dropdown lists in your forms, offering a variety of options to users. It's essential to set up an array representing the options for the dropdown.</p>
+
+<p>Example Usage of `select` Element with an Options Array:</p>
+<span class="info">Defining the Options Array:</span>
+<pre class="language-php">
+    {$arr = [
+        ''  =>  '----',
+        '1' => 'Option 1',
+        '2' => 'Option 2',
+        '3' => 'Option 3',
+    ]}
+</pre>
+<p>Implementation of the `select` Element</p>
+<pre class="language-php">
+    {select
+        label="SELECT BOX"
+        name='select_test'
+        selected='1'
+        data="$arr"
+        placeholder="`Hello World`"
+        info="`Hello World`"
+        isRequired}
+</pre>
+
+<span class="info">Output</span>
+<span class="html-example">
+    {$arr = [
+        ''  =>  '----',
+        '1' => 'Option 1',
+        '2' => 'Option 2',
+        '3' => 'Option 3',
+    ]}
+
+    {select
+        label="SELECT BOX"
+        name='select_test'
+        selected='1'
+        data="$arr"
+        placeholder="`Hello World`"
+        info="`Hello World`"
+        isInvalid
+        isRequired}
+    </span>
+
+<h4>Usage of `radio` in Template Engine</h4>
+
+<p>Just like the `select` element, the `radio` element in the template engine requires an array for defining the available options. However, unlike `select`, which allows multiple options in a dropdown format, `radio` presents options as individual radio buttons, typically for selecting one among several choices.</p>
+
+<p>Example Usage of `radio` Element with an Options Array:</p>
+<span class="info">Defining the Options Array:</span>
+<pre class="language-php">
+    {$arr = [
+        '1' => 'Option 1',
+        '2' => 'Option 2',
+        '3' => 'Option 3',
+    ]}
+</pre>
+<span class="info">Implementation of the `radio` Element</span>
+<pre class="language-php">
+    {radio
+        label="`Radio test`"
+        name='radios_test'
+        selected='3'
+        data="$arr"
+        placeholder="test"
+        info="Short info message"
+        isInvalid
+        isRequired}
+</pre>
+
+<span class="info">Output</span>
+<span class="html-example">
+        {$arr = [
+        '1' => 'Option 1',
+        '2' => 'Option 2',
+        '3' => 'Option 3',
+        ]}
+
+        {radio
+            label="`Radio test`"
+            name='radios_test'
+            selected='3'
+            data="$arr"
+            placeholder="test"
+            info="Short info message"
+            isInvalid
+            isRequired}
+    </span>
+{/forms}
+
+{body}
+    include{forms}
+{/body}

@@ -1,0 +1,54 @@
+{metadata}
+    {$title = "Aurora | Calculations"}
+    {$description = "Aurora supports block-based calculations, where the scope of variable modifications is confined to the block in which they occur, unless specifically imported into another block."}
+    {$keywords = "calculations, tpl"}
+{/metadata}
+
+{calculations}
+<h3>Calculations</h3>
+<p>Aurora supports block-based calculations, where the scope of variable modifications is confined to the block in which they occur, unless specifically imported into another block. Let’s break down the scenarios you’ve mentioned.</p>
+
+<h4>Isolated Calculations within Blocks</h4>
+<p>In this example, calculations within the <span class="bold">{{calculate}}</span> block do not affect the <span class="bold">{{layout}}</span> block. Each block operates independently, maintaining its own scope for variables:</p>
+<pre class="language-php">
+    {calculate}
+      {$a += 1}
+      {$a} // Output is 2
+    {/calculate}
+
+    {layout}
+      {$a = 1}
+      include{calculate}
+      {$a} // Output is 1, unchanged by the {calculate} block
+    {/layout}
+</pre>
+
+<p>In this case, despite incrementing <span class="bold">$a</span> in <span class="bold">{{calculate}}</span>, its value in <span class="bold">{{layout}}</span> remains unaffected due to the isolated scope of each block.</p>
+
+<span class="clearfix"></span>
+<h4>Sharing Calculated Values Across Blocks</h4>
+<p>To influence the value of <span class="bold">$a</span> in <span class="bold">{{layout}}</span> based on the calculations in <span class="bold">{{calculate}}</span>, you use import instead of include. This approach effectively extends the scope of <span class="bold">{{calculate}}</span> to <span class="bold">{{layout}}</span>, allowing changes in <span class="bold">{{calculate}}</span> to reflect in <span class="bold">{{layout}}</span>:</p>
+
+<pre class="language-php">
+    {calculate}
+      {$a += 1}
+      {$a} // Output is 2
+    {/calculate}
+
+    {layout}
+      {$a = 1}
+      import{calculate}
+      {$a} // Output is now 2, affected by the {calculate} block
+    {/layout}
+</pre>
+<p>In this example, <span class="bold">import{{calculate}}</span> means that the changes made to <span class="bold">$a</span> in the <span class="bold">{{calculate}}</span> block are carried over to the <span class="bold">{{layout}}</span> block, overriding its original value.</p>
+
+<p>
+    This flexible system allows you to control the scope and impact of calculations and variable manipulations across different blocks within your template engine.
+    This approach is particularly useful for managing dependencies and interactions between various sections of your templates, ensuring that changes are made only where intended.
+</p>
+{/calculations}
+
+{body}
+    include{calculations}
+{/body}

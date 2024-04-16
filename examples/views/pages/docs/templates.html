@@ -1,0 +1,65 @@
+{metadata}
+    {$title = "Aurora | Templates"}
+    {$description = "Setting Up Input Templates"}
+    {$keywords = "templates, tpl"}
+{/metadata}
+
+{templates}
+<h3>Setting Up Input Templates</h3>
+<p>For the template engine to work effectively, you need to define the input templates that will be used. These templates are essentially the building blocks of your final rendered page.</p>
+<p>To ensure effective functioning of the template engine, it is crucial to define the input templates. These templates serve as components and content sections which can be incorporated within your template.</p>
+<span class="clearfix"></span>
+
+<h4>Defining the Templates</h4>
+<p>Use the setFiles method to define a list of your HTML template files. The order of templates in this list does not affect the processing as each template contains independent blocks that can be utilized as needed.</p>
+
+<span class="info">Here's an example:</span>
+
+<pre class="language-php">
+    $templateEngine->setFiles([
+        'index.html',
+        'components/header.html',
+        'components/footer.html',
+        'pages/homePage.html',
+    ]);
+</pre>
+
+<p class="georgia">In this setup, 'index.html' acts as the main template, including the basic structure of the web page, such as the 'layout', while the other files ('header.html', 'footer.html', 'homePage.html') are components that can be included in the main template.</p>
+
+<h4>The Main Template File (index.html)</h4>
+<p>
+    Your main template file (e.g., 'index.html') should include the primary layout structure. This file can incorporate other template components using the include{{}} syntax.
+</p>
+<span class="info">Here's how the 'index.html' file might look:</span>
+
+<pre class="language-html">
+    {layout}
+    <!DOCTYPE html>
+    <html lang="{$lang}">
+    <head>
+        <title>{$title}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    </head>
+    <body>
+        include{header}
+
+        <section class="container">
+            <div class="content">
+                include{content}
+            </div>
+        </section>
+
+        include{footer}
+    </body>
+    </html>
+    {/layout}
+</pre>
+
+<p>In this example, include{{header}}, include{{content}}, and include{{footer}} are placeholders for other template files. The template engine will replace these placeholders with the respective content from the specified files.</p>
+{/templates}
+
+{body}
+    include{templates}
+{/body}

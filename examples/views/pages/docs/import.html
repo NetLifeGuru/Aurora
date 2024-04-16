@@ -1,0 +1,74 @@
+{metadata}
+    {$title = "Aurora | Leveraging import{{}}"}
+    {$description = "Leveraging `import{{}}` for Standalone Applications with a Routing System"}
+    {$keywords = "Leveraging import, tpl"}
+{/metadata}
+
+{import}
+<h3>Leveraging `import{{}}` for Standalone Applications with a Routing System</h3>
+<p>
+    In a standalone application that doesn't rely on an external framework, using the import feature can be extremely beneficial, especially for managing page-specific meta tags and other components.
+    This approach enhances the flexibility and modularity of each page within your application.
+</p>
+
+<h4>Example of Structuring Routes with `import`:</h4>
+<p>Consider a routing structure like the following in your standalone PHP application:</p>
+<pre class="language-php">
+    $templateEngine->setRoutes([
+        '*' => [
+            '/layout.html',
+            '/components/header.html',
+            '/components/footer.html',
+            '/components/forms.html',
+        ],
+        '' => [
+            '/pages/index.html',
+        ],
+        'docs' => [
+            '/pages/docs.html',
+        ],
+        'contact' => [
+            '/pages/contact.html',
+        ],
+    ]);
+</pre>
+<h4>Dynamic Meta Tag Management:</h4>
+
+<p>In each specific page, like <span class="bold">docs.html</span>, you can define meta tags or other necessary head elements within a block, say <span class="bold">{{meta}}</span>:</p>
+<pre class="language-php">
+    {meta}
+      {$title = "Dynamic Title for Docs Page"}
+      {$description = "Description specific to Docs Page"}
+    {/meta}
+</pre>
+
+<p>By utilizing import in your <span class="bold">layout.html</span>, you can dynamically include these meta tags into the head of your HTML structure:</p>
+<pre class="language-html">
+    <!DOCTYPE html>
+    <html lang="{$lang}">
+    <head>
+        {import{meta}}
+        <title>{$title}</title>
+        <meta name="description" content="{$description}">
+        <!-- Other head elements -->
+    </head>
+    <body>
+        include{header}
+        <!-- Page Content -->
+        include{footer}
+    </body>
+    </html>
+</pre>
+
+<h4>Advantages:</h4>
+
+<ul>
+    <li><span class="bold">Dynamic Content:</span> The use of import allows for dynamic inclusion of content like meta tags, which can be different for each page (like Home, Docs, Contact).</li>
+    <li><span class="bold">Modular Structure:</span> This approach facilitates a more modular and maintainable structure for your application, with each component or block being self-contained.</li>
+    <li><span class="bold">Simplified Management:</span> Managing meta tags and other head elements becomes straightforward, as they are encapsulated within their respective page templates.</li>
+</ul>
+{/import}
+
+{body}
+    include{import}
+{/body}

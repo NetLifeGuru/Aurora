@@ -1,0 +1,80 @@
+{Input}
+{if $isHidden}
+    <input type="hidden" {$chain}>
+{else}
+    <div class="form-control form-input{$isInvalid?' invalid'}">
+        <label> {$label} {$isRequired?<span class="asterisk">*</span>}</label>
+        <input {$chain} {$isRequired?' required'} {$isReadOnly?' readonly'}>
+
+        {if $isInvalid && $error}
+            <span class="error">{$error}</span>
+        {/if}
+        {if $info}
+            <div class="info">{$info}</div>
+        {/if}
+    </div>
+{/if}
+{/Input}
+
+{Textarea}
+<div class="form-control form-textarea{$isInvalid?' invalid'}">
+    <label> {$label} {$isRequired?<span class="asterisk">*</span>}</label>
+    <textarea {$chain} {$isRequired?' required'} {$isReadOnly?' readonly'}>{$value}</textarea>
+
+    {if $isInvalid && $error}
+    <span class="error">{$error}</span>
+    {/if}
+    {if $info}
+    <div class="info">{$info}</div>
+    {/if}
+</div>
+{/Textarea}
+
+{Select}
+<div class="form-control form-select{$isInvalid?' invalid'}">
+    <label> {$label} {$isRequired?<span class="asterisk">*</span>}</label>
+    <select {$chain} {$isRequired?' required'} {$isReadOnly?' readonly'}>
+        {foreach $data as $value => $title}
+        <option value="{$value}" {$selected==$value?selected}>{$title}</option>
+        {/foreach}
+    </select>
+
+    {if $isInvalid && $error}
+    <span class="error">{$error}</span>
+    {/if}
+    {if $info}
+    <div class="info">{$info}</div>
+    {/if}
+</div>
+{/Select}
+
+{Radio}
+<div class="form-control{$isInvalid?' invalid'}">
+    <label> {$label} {$isRequired?<span class="asterisk">*</span>}</label>
+    {foreach $data as $value => $title}
+    <div class="form-radio">
+        <input name="{$name}" type="radio" value="{$value}" {$selected == $value?' checked'} />
+    {$title}
+    </div>
+    {/foreach}
+    {if $isInvalid && $error}
+        <span class="error">{$error}</span>
+    {/if}
+    {if $info}
+        <div class="info">{$info}</div>
+    {/if}
+</div>
+{/Radio}
+
+{Checkbox}
+<div class="form-control form-checkbox{$isInvalid?' invalid'}">
+    <input type="checkbox" {$isRequired?' required'} {$isReadOnly?' readonly'} {$isChecked?' checked'}/>
+    <label> {$label} {$isRequired?<span class="asterisk">*</span>}</label>
+    {if $isInvalid && $error}
+    <span class="error">{$error}</span>
+    {/if}
+    {if $info}
+    <div class="info">{$info}</div>
+    {/if}
+</div>
+{/Checkbox}

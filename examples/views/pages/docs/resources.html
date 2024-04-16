@@ -1,0 +1,69 @@
+{metadata}
+    {$title = "Aurora | Resources"}
+    {$description = "Adding Resources to Templates"}
+    {$keywords = "resources, tpl"}
+{/metadata}
+
+{resources}
+<h3>Adding Resources to Templates</h3>
+<p>Adding local files such as images, CSS, or JavaScript with precise URLs is streamlined with the template engine's built-in variable: <span class="bold">{{$domain}}</span>. This variable holds the domain where the template engine is operating, making it easier to reference resources relative to the root of the website.</p>
+
+<span class="info">Example of Adding Resources</span>
+<pre class="language-html">
+    {layout}
+        <!DOCTYPE html>
+        <html lang="{$lang}">
+        <head>
+            import{metadata}
+            <title>{$title}</title>
+            <meta name="description" content="">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta property="og:title" content="">
+            <meta property="og:type" content="">
+            <meta property="og:url" content="">
+            <meta property="og:image" content="">
+            <meta property="og:image:alt" content="">
+            <meta name="theme-color" content="#ffffff">
+
+            <!-- Favicon links -->
+            <link rel="icon" type="image/x-icon" href="{$domain}assets/images/favicon.ico" sizes="any">
+            <link rel="apple-touch-icon" href="{$domain}assets/images/favicon.ico">
+
+            <!-- Version Macro to append file modification timestamp -->
+            <link href="{$domain}{Version|assets/css/style.min.css}" rel="stylesheet">
+            <link href="{$domain}{Version|assets/prism/prism.css}" rel="stylesheet">
+    {/layout}
+
+</pre>
+
+<h4>Version Macro for Cache Busting</h4>
+<p>
+    The <span class="bold">Version</span> macro appends a version query string to the URL, based on the file modification time <span class="bold">(filemtime)</span>. This technique is commonly used for cache busting, ensuring that users always receive the most recent version of the file.
+</p>
+
+<span class="info">For example:</span>
+<pre class="language-html">
+    <link href="{$domain}{Version|assets/css/style.min.css}" rel="stylesheet">
+
+</pre>
+
+<p>This will result in something like:</p>
+<pre class="language-html">
+    <link href="https://yourdomain.com/assets/css/style.min.css?v=1712773244" rel="stylesheet" />
+
+</pre>
+
+<p>
+    The query string <span class="bold">?v=1712773244</span> at the end of the URL ensures that if the file style.min.css has been changed since the last download, the browser will download the new version instead of using the cached one.
+</p>
+
+<p>
+    By using the <span class="bold">{{$domain}}</span> variable and <span class="bold">Version</span> macro within your templates, you can easily manage resources and control caching behavior. This functionality promotes better resource management and ensures that your web application utilizes the latest versions of its resources, leading to an optimal user experience.
+</p>
+
+{/resources}
+
+{body}
+    include{resources}
+{/body}

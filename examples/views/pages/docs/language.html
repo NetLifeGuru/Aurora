@@ -1,0 +1,43 @@
+{metadata}
+    {$title = "Aurora | Language Constants"}
+    {$description = "Setting Language Constants"}
+    {$keywords = "language constants, tpl"}
+{/metadata}
+
+{language}
+<h3>Setting Language Constants</h3>
+<p>The template engine also supports the definition of language constants, which are crucial for internationalization and localization. These constants are similar to variables but are specifically used for language-related strings.</p>
+
+<h4>Defining Language Constants</h4>
+<p>Language constants are defined using the <span class="bold">setLanguageConstants</span> method, where each constant is assigned a corresponding value in an associative array:</p>
+
+<pre class="language-php">
+    $templateEngine->setLanguageConstants([
+        'hello world' => 'Hello World',
+        // ... other language constants
+    ]);
+</pre>
+<p>This method allows for defining multiple language constants that can be easily managed and updated.</p>
+
+<h4>Using Language Constants in Templates</h4>
+<p>In the templates, language constants are referenced using a specific syntax with backticks ``. This syntax differentiates language constants from regular variables.</p>
+
+<span class="info">Example of referencing a language constant in a template:</span>
+<pre class="language-html">
+    {layout}
+        {`hello world`}
+    {/layout}
+</pre>
+
+<h4>Output on Screen</h4>
+<p>When the above template is rendered, it will output the value associated with the 'hello world' constant. In this case, the output on the screen would be:</p>
+
+<pre class="language-text">
+    Hello World
+</pre>
+
+{/language}
+
+{body}
+    include{language}
+{/body}

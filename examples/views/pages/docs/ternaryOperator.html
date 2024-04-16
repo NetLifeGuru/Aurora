@@ -1,0 +1,65 @@
+{metadata}
+    {$title = "Aurora | Ternary Operator"}
+    {$description = "The ternary operator is a compact conditional expression widely used in various programming languages, including in template systems like the one you're using."}
+    {$keywords = "ternary operators, tpl"}
+{/metadata}
+
+{ternaryOperator}
+
+<h3>Ternary Operator</h3>
+
+<p>
+    The ternary operator is a compact conditional expression widely used in various programming languages, including in template systems like the one you're using.
+    It provides a shorthand way of executing an expression based on a condition.
+    In essence, it's a concise version of the if-else statement but used for assignments or direct output.
+</p>
+
+<h4>How It Works:</h4>
+
+<p>The basic syntax of the ternary operator is: <span class="bold">`condition ? expression1 : expression2.`</span></p>
+<ul>
+    <li><span class="bold">Condition:</span> This is the expression to be evaluated. If the condition is true, expression1 is executed; otherwise, expression2 is executed.</li>
+    <li><span class="bold">Expression1:</span> This is the output or operation executed if the condition is true.</li>
+    <li><span class="bold">Expression2:</span> This is the output or operation executed if the condition is false.</li>
+</ul>
+
+<h4>Examples in Template Engine:</h4>
+
+<span class="info">Standard Ternary Operation</span>
+<pre class="language-php">
+    {$a = 1}
+    {$b = 2}
+    {$a==$b ? '$a & $b are equal': '$a & $b are not equal' }
+</pre>
+<p>Here, if <span class="bold">$a</span> equals <span class="bold">$b</span>, the string <span class="bold">'$a & $b are equal'</span> is returned, otherwise <span class="bold">'$a & $b are not equal'</span>.</p>
+
+<span class="info">Ternary Operation for Positive Condition Only</span>
+<pre class="language-php">
+    {$a = 1}
+    {$b = 2}
+    {$a==$b ? '$a & $b are equal'}
+</pre>
+<p>This example checks if <span class="bold">$a</span> equals <span class="bold">$b</span>. If true, it returns <span class="bold">'$a & $b are equal'</span>. If false, it returns nothing or a default value if specified.</p>
+
+<span class="info"></span>
+<pre class="language-php">
+    {$a = 1}
+    {$b = 1}
+    {$a == $b ? <span class="bold">ok</span>}
+</pre>
+<p>In this case, if <span class="bold">$a</span> equals <span class="bold">$b</span>, HTML content (<span class="bold">ok</span>) is returned. This demonstrates the ternary operator’s versatility in handling not just text but also HTML elements.</p>
+
+<h4>Key Points:</h4>
+<ul>
+    <li>Ternary operators are invaluable for making templates more concise and readable, especially when dealing with simple conditional logic.</li>
+    <li>It can return various types of outputs, including strings, numerical values, and even HTML markup, depending on the need.</li>
+    <li>Correct implementation ensures templates remain uncluttered and maintainable, particularly when dealing with multiple conditions.</li>
+</ul>
+<span class="clearfix"></span>
+<p class="georgia">This capability greatly enhances the expressiveness and functionality of your template engine, allowing for dynamic and responsive template creation.</p>
+
+{/ternaryOperator}
+
+{body}
+    include{ternaryOperator}
+{/body}

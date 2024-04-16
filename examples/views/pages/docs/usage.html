@@ -1,0 +1,60 @@
+{metadata}
+    {$title = "Aurora | Basic Usage"}
+    {$description = "Basic Usage of the PHP NLG Template Engine"}
+    {$keywords = "basic usage, tpl"}
+{/metadata}
+
+{usage}
+
+<h3>Basic Usage of the PHP NLG Template Engine</h3>
+<p>This section provides a straightforward guide to get started with the PHP Template Engine. Here's how you can set up and render your first template:</p>
+
+<h4>Step 1: Loading the Engine</h4>
+<p>First, ensure that the template engine file is included in your PHP script. You can do this by requiring the engine file at the beginning of your PHP file.</p>
+<pre class="language-php">
+    require_once "../src/aurora.php";
+</pre>
+
+<h4>Step 2: Creating a New Instance</h4>
+<p>Next, create a new instance of the template engine.</p>
+<pre class="language-php">
+    $templateEngine = new Aurora\Loader();
+</pre>
+
+<h4>Step 3: Setting Input Templates</h4>
+<p>Define the template files you want to use. In this example, we are using 'index.html' as our template.</p>
+
+<pre class="language-php">
+    $templateEngine->setFiles([
+        'index.html'
+    ]);
+</pre>
+
+<h4>Step 4: Generating Cache</h4>
+<p>For initial loading or when changes are made to your templates, enable cache creation. This helps in optimizing the rendering performance.</p>
+<pre class="language-php">
+    $templateEngine->createCache(true);
+</pre>
+
+<h4>Step 5: Rendering Output</h4>
+<p>Finally, render the template. The 'layout' specifies the starting block for rendering. In 'index.html', we have defined a 'layout' block containing 'Hello World'.</p>
+<pre class="language-php">
+    print $templateEngine->render("layout");
+</pre>
+
+<h4>The Template File (index.html)</h4>
+<p>Here's how the 'index.html' template file looks:</p>
+
+<pre class="language-html">
+    {layout}
+        <h1>Hello World</h1>
+    {/layout}
+</pre>
+
+<p>By following these steps, you'll render a simple template that displays "Hello World". This basic setup is just the beginning of what you can achieve with the PHP Template Engine.</p>
+{/usage}
+
+
+{body}
+    include{usage}
+{/body}

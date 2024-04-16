@@ -1,0 +1,92 @@
+{metadata}
+    {$title = "Aurora | Routing System"}
+    {$description = "Standalone Mode with Routing System"}
+    {$keywords = "router, routing system, tpl"}
+{/metadata}
+
+{router}
+<h3>Standalone Mode with Routing System</h3>
+<p>
+    The PHP Template Engine offers the flexibility to be used in a standalone mode, ideal for creating simple web pages without relying on an external framework.
+    This mode is especially useful for projects where a full-scale framework might be unnecessary or overly complex.
+</p>
+<h4>Implementing the Routing System</h4>
+<p>
+    In standalone mode, instead of setting up input files using <span class="bold">`$templateEngine->setFiles([...]);`</span>, the template engine utilizes a basic routing system configured via <span class="bold">`$templateEngine->setRoutes([...]);`</span>.
+    This approach allows for defining different templates for different routes or paths within your application.
+</p>
+
+<span class="info">Configuration:</span>
+<pre class="language-php">
+    <?php
+    $templateEngine = new Aurora\Loader([
+        'views' => '/views',
+        'cache' => '/cache',
+    ]);
+
+    $templateEngine->setRoutes([
+        '*' => [
+            '/layout.html',
+            '/components/header.html',
+            '/components/footer.html',
+            '/components/forms.html',
+        ],
+        '' => [
+            '/pages/index.html',
+        ],
+        'docs' => [
+            '/pages/docs.html',
+        ],
+        'contact' => [
+            '/pages/contact.html',
+            '/components/form.html',
+        ],
+    ]);
+
+    $templateEngine->setLanguageConstants([
+        'hello world' => 'Hello World',
+    ]);
+
+    $templateEngine->setVariables([
+        'lang' => 'en',
+        'title' => '...',
+        'description' => '...',
+        'articles' => [...]
+    ]);
+
+    $templateEngine->createCache(true);
+
+    print $templateEngine->render("layout");
+</pre>
+
+<h4>Key Points:</h4>
+<ul>
+    <li>'*' specifies templates that are loaded for all routes</li>
+    <li>'' represents the homepage</li>
+    <li>Custom routes like 'docs' and 'contact' can be defined for specific pages or components.</li>
+</ul>
+<p>
+    Using this setup, you can build a complete web page with multiple routes, solely using the NLG template engine, offering a lightweight yet powerful alternative to more complex frameworks.
+</p>
+<h4>Ideal for Web Coders and Collaboration with Developers</h4>
+<p>
+    The template creation method employed by this PHP Template Engine is particularly well-suited for web coders, emphasizing ease of use and accessibility.
+    This approach facilitates an efficient workflow, especially when collaborating with developers in a team environment.
+</p>
+<h4>Key Advantages for Web Coders:</h4>
+
+<ol>
+    <li><span class="bold">Simplified Template Creation:</span> The template engine allows web coders to focus on designing and structuring web pages without needing deep programming knowledge. This makes it easier to create complex layouts and components.</li>
+    <li><span class="bold">Seamless Handoff to Developers:</span> Once the templates are crafted, they can be effortlessly passed on to developers. The structured format of the templates ensures that developers can easily integrate them into the broader application context.</li>
+    <li><span class="bold">Enhanced Collaboration:</span> This approach bridges the gap between design and development. Web coders can work on the visual and structural aspects of the web pages, while developers handle the more technical implementation details.</li>
+    <li><span class="bold">Maintainability and Scalability:</span> By separating the templates into manageable blocks and components, future updates and enhancements can be executed more efficiently. This separation of concerns not only makes the code more maintainable but also scalable for larger projects.</li>
+</ol>
+<span class="clearfix"></span>
+<p>
+    In summary, the PHP Template Engine is designed to cater to the needs of web coders, providing a user-friendly interface for template creation while ensuring smooth integration with developers' work. This results in a cohesive and efficient team workflow.
+</p>
+{/router}
+
+{body}
+    include{router}
+{/body}

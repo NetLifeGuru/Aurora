@@ -1,0 +1,66 @@
+{metadata}
+    {$title = "Aurora | Template Error Handling"}
+    {$description = "Error Handling in PHP Template Engine"}
+    {$keywords = "error handling, tpl"}
+{/metadata}
+
+{errorHandling}
+<h3>Error Handling in PHP Template Engine</h3>
+<p>
+    Error handling is a crucial component of any robust template engine, and your PHP Template Engine is no exception.
+    It's designed to efficiently detect and report errors, aiding in the debugging process.
+    Understanding how errors are identified and presented can greatly assist in timely and accurate troubleshooting.
+</p>
+
+<h4>Overview of Error Reporting</h4>
+
+<p>When an error occurs, the template engine displays an error message that includes references to two sources of the error:</p>
+
+<ul>
+    <li><span class="bold">HTML Template Reference:</span> The engine first points to the line in the HTML template where the error might have originated. This is essential as the root cause of errors often lies in the template syntax or structure.</li>
+    <li><span class="bold">Generated PHP Class Code:</span> Additionally, the engine shows the corresponding code in the generated PHP class from the cache. While this is more informative, the actual correction needs to be made in the HTML template.</li>
+</ul>
+
+<p>This dual reference system is vital because the template engine generates a native PHP class corresponding to each template and caches it for performance. Errors in the templates, therefore, manifest in these generated classes.</p>
+
+<h4>Common Error Scenarios</h4>
+
+<h5>Curly Brackets in Text Content</h5>
+
+<p>A typical error occurs when curly brackets are intended to be displayed in text but are incorrectly formatted, causing the engine to misinterpret them as code syntax.</p>
+
+<span class="info">For example, consider the following template snippet:</span>
+
+<pre class="language-php">
+    {layout}
+        <strong>This is my text with {curly brackets}</strong>
+    {/layout}
+</pre>
+<p>To correctly display curly brackets, they should be doubled:</p>
+<pre class="language-php">
+    {layout}
+        <strong>This is my text with {{curly brackets}}</strong>
+    {/layout}
+</pre>
+
+<img src="{$domain}{Version|assets/images/error_handling_brackets.jpg}" alt="error handling image" title="error handling image" />
+
+<h5>Incorrect Array Definition</h5>
+
+<p>Another common error is improper definition of arrays within the template, which can lead to syntax issues. For example:</p>
+
+<pre class="language-php">
+    {layout}
+        {$a = [1,2a]}
+    {/layout}
+</pre>
+<p>
+    In this case, the array syntax is incorrect, which would lead to an error. The template engine's error handling system would pinpoint the location of this mistake both in the HTML template and the corresponding PHP class, helping the developer to identify and correct the issue.
+</p>
+
+<img src="{$domain}{Version|assets/images/error_handling_array.jpg}" alt="error handling image" title="error handling image" />
+{/errorHandling}
+
+{body}
+    include{errorHandling}
+{/body}

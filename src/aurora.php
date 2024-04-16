@@ -1354,7 +1354,8 @@ class Loader extends templateMacros implements TemplateInterface
             $pathElements = array_intersect(explode("/", __DIR__), explode("/", getcwd()));
             $array = array_diff(range(0, max(array_keys($pathElements))), array_keys($pathElements));
             $commonPath = implode("/", array_slice($pathElements, 0, array_shift($array)));
-            define('workingDirectory', $commonPath);
+            $path = realpath($setup['root'] ?? $commonPath);
+            define('workingDirectory', $path);
         }
 
         /**
@@ -2217,9 +2218,21 @@ class Loader extends templateMacros implements TemplateInterface
     public function setRoutes(array $routes = []): void
     {
         if (isset($routes['*'])) {
-            foreach ($routes as $route => $template) {
+            foreach ($routes as $route => $templates) {
                 if ($route === '*') continue;
-                $routes[$route] = array_values(array_unique(array_merge($routes['*'], $template)));
+
+                foreach ($templates as $value) {
+                    if (preg_match("/\*\.(\S+)$/", $value)) {
+
+                        $files = glob($this->workingDirectory . $value);
+                        $templates = [];
+                        foreach($files as $file) {
+                            $templates[] = str_replace($this->workingDirectory, '', $file);
+                        }
+                    }
+                }
+
+                $routes[$route] = array_values(array_unique(array_merge($routes['*'], $templates)));
             }
         }
 

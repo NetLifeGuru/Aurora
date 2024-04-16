@@ -1,0 +1,42 @@
+{metadata}
+    {$title = "Aurora | Curly Brackets in Text Content"}
+    {$description = "Handling Curly Brackets in Text Content"}
+    {$keywords = "curly brackets, tpl"}
+{/metadata}
+
+{curlyBrackets}
+
+<h3>Handling Curly Brackets in Text Content</h3>
+<p>In the context of a template engine that utilizes curly brackets {} for identifying code, special attention is needed when curly brackets are part of the intended text output. Incorrect usage can lead to errors, as the engine might interpret them as code.</p>
+
+<h4>Correct Usage of Curly Brackets in Text:</h4>
+
+<ul>
+    <li><span class="bold">Standard Use:</span>  In most scenarios, curly brackets {} in your templates are used to define code blocks or to enclose variables and expressions.</li>
+    <li><span class="bold">Special Case - Displaying Curly Brackets in Text:</span> If you need to include curly brackets as part of your HTML or text content within the template, simply write them twice: `{{` and `}}`.</li>
+</ul>
+
+<span class="info">For example</span>
+
+<pre class="language-html">
+    {layout}
+        <strong>This is my text with {{curly brackets}}</strong>
+    {/layout}
+</pre>
+
+<p>This will correctly output:</p>
+<pre class="language-html">
+        This is my text with {curly brackets}
+</pre>
+
+<h4>Why Double Brackets?</h4>
+
+<ul>
+    <li><span class="bold">Clarity and Avoiding Confusion:</span> This approach makes it clear that the curly brackets are meant to be part of the text output, not code syntax.</li>
+    <li><span class="bold">Preventing Errors:</span> It helps the template engine distinguish between code and text, avoiding parsing errors or unintended behavior.</li>
+</ul>
+{/curlyBrackets}
+
+{body}
+    include{curlyBrackets}
+{/body}

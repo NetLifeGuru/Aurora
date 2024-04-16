@@ -1,0 +1,521 @@
+{metadata}
+    {$title = "Macros"}
+    {$description = "Macros in Template Engines - Understanding the Concept"}
+    {$keywords = "Macros, tpl"}
+{/metadata}
+
+{macros}
+<h3>Macros in Template Engines - Understanding the Concept</h3>
+<p>
+    Macros in a template engine are essentially functions or methods that are invoked within the template to process or manipulate data.
+    They serve as powerful tools, enabling the dynamic generation of content, formatting of output, and execution of complex logic directly within the template
+</p>
+
+<h4>Definition and Purpose:</h4>
+<ul>
+    <li><span class="bold">Macro:</span> A predefined function in the template engine that can be called within the template to perform specific tasks, like data formatting, string manipulation, or even complex logical operations.</li>
+    <li><span class="bold">Purpose:</span> Macros enhance the flexibility and capability of a template engine, allowing for more advanced, dynamic, and customized rendering of content.</li>
+</ul>
+
+<h4>Usage:</h4>
+<span class="info">Basic Macro Call:</span>
+<pre class="language-php">
+    {$html = '<span class="bold">Hello World</span>'}
+    {htmlChars|$html}
+</pre>
+<p>Here, htmlChars is a macro that takes $html as input and processes it.</p>
+<span class="info">Predefined Macro Function</span>
+<pre class="language-php">
+    public function HtmlChars(string $value): string {
+        return htmlspecialchars($value);
+    }
+</pre>
+<p>This function is used to safely render HTML by converting special characters to HTML entities.</p>
+
+<h4>Language Constants as Macros</h4>
+<ul>
+    <li>Direct Call: {{hello world}} outputs "Hello World".</li>
+    <li>Via Macro: {{lang|hello world}} – achieves the same result, demonstrating multiple ways to call macros.</li>
+</ul>
+<pre class="language-php">
+    {`hello world`}
+    {lang|hello world}
+</pre>
+
+<h4>Chained Macros</h4>
+<p>Multiple macros can be chained, where the output of one becomes the input to the next, allowing for complex data processing within a single line.</p>
+<pre class="language-php">
+    {func1|func2|func3|$value}
+</pre>
+
+<h4>Key Points:</h4>
+<ul>
+    <li>Macros significantly reduce the complexity of templates by encapsulating commonly used functionality.</li>
+    <li>They provide a bridge between the template and the underlying PHP functions, making templates more powerful and flexible.</li>
+    <li>Chaining macros enables complex operations to be performed in a concise and readable manner.</li>
+    <li>Macros can handle a wide range of tasks, from simple string manipulations to more complex logical operations, enhancing the capabilities of your template engine.</li>
+</ul>
+<span class="clearfix"></span>
+<p>Using of macros in templates simplifies template syntax, promotes code re-usability, and enhances the expressiveness of your templates, making them an indispensable tool in template development.</p>
+
+<h3>Macros: Continuously Evolving for Enhanced Functionality</h3>
+
+<p>
+    As part of our commitment to providing a robust and dynamic template engine, we continuously work on expanding and refining our macro functionalities.
+    At this stage, we are pleased to offer a diverse range of macros designed to cater to various common requirements in web development.
+    These macros simplify tasks such as data formatting, string manipulation, conditional rendering, and array handling, directly within your templates.
+    Please note that our collection of macros is an ongoing project, and we regularly update our offerings to include new features and improvements.
+    The macros currently available represent the initial stage of this evolving toolset, crafted to enhance the efficiency and capabilities of your templating experience.
+</p>
+
+<div class="table-responsive">
+    <table>
+        <tr>
+            <th>Macro</th>
+            <th>Usage</th>
+            <th>Output</th>
+        </tr>
+        <tr>
+            <td>DateFormat</td>
+            <td>
+            <pre class="language-php">
+    {$date = date('Y-m-d H:i:s')}
+    {DateFormat|$date,'"l jS \of F Y h:i:s A'}
+        </pre>
+            </td>
+            <td>
+                {$date = date('Y-m-d H:i:s')}
+                {DateFormat|$date,'"l jS \of F Y h:i:s A'}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Escape
+            </td>
+            <td>
+            <pre class="language-php">
+    {Escape|'<script>alert("a")</script>'}
+        </pre>
+            </td>
+            <td>
+                {Escape|'
+                <script>alert("a")</script>
+                '}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Trunc
+            </td>
+            <td>
+            <pre class="language-php">
+    {$text = Lorem Ipsum is simply dummy...}
+    {Trunc|$text'}
+        </pre>
+            </td>
+            <td>
+                {$text = "Lorem Ipsum is simply dummy..."}
+                {Trunc|$text,10}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Upper
+            </td>
+            <td>
+            <pre class="language-php">
+    {Upper|"text"}
+        </pre>
+            </td>
+            <td>
+                {Upper|"text"}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Lower
+            </td>
+            <td>
+            <pre class="language-php">
+    {Lower|"text"}
+        </pre>
+            </td>
+            <td>
+                {Lower|"text"}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Title
+            </td>
+            <td>
+            <pre class="language-php">
+    {Title|"text"}
+        </pre>
+            </td>
+            <td>
+                {Title|"text"}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                IfClass
+            </td>
+            <td>
+            <pre class="language-php">
+    {$isLoggedIn = 1}
+    {IfClass|$isLoggedIn,active}
+        </pre>
+            </td>
+            <td>
+                {$isLoggedIn = 1}
+                {IfClass|$isLoggedIn,active}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                IfEval
+            </td>
+            <td>
+            <pre class="language-php">
+    {$isLoggedIn = 1}
+    {IfEval|$isLoggedIn,active}
+        </pre>
+            </td>
+            <td>
+                {$isLoggedIn = 1}
+                {IfEval|$isLoggedIn,active}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                CompareClass
+            </td>
+            <td>
+            <pre class="language-php">
+    {$a = 1}
+    {$b = 1}
+    {CompareClass|$a,$b,are_equal}
+        </pre>
+            </td>
+            <td>
+                {$a = 1}
+                {$b = 1}
+                {CompareClass|$a,$b,are_equal}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Compare
+            </td>
+            <td>
+            <pre class="language-php">
+    {$a = 1}
+    {$b = 1}
+    {Compare|$a,$b,are_equal}
+        </pre>
+            </td>
+            <td>
+                {$a = 1}
+                {$b = 1}
+                {Compare|$a,$b,are_equal}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Abs
+            </td>
+            <td>
+            <pre class="language-php">
+    {$a = -111}
+    {Abs|$a}
+        </pre>
+            </td>
+            <td>
+                {$a = -111}
+                {Abs|$a}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Max
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [1,3,4,5]}
+    {Max|$arr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [1,3,4,5]}
+                {Max|$arr}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Min
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [1,3,4,5]}
+    {Min|$arr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [1,3,4,5]}
+                {Min|$arr}
+            </td>
+            <td>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                RoundUp
+            </td>
+            <td>
+            <pre class="language-php">
+    {$num = 3.23}
+    {RoundUp|$num}
+        </pre>
+            </td>
+            <td>
+                {$num = 3.23}
+                {RoundUp|$num}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                RoundDown
+            </td>
+            <td>
+            <pre class="language-php">
+    {$num = 3.23}
+    {RoundDown|$num}
+        </pre>
+            </td>
+            <td>
+                {$num = 3.23}
+                {RoundDown|$num}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Sort
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [
+        0=>1,
+        2=>4,
+        3=>4,
+        41=>3,
+        5=>1,
+        434=>3232
+    ]}
+    {$newArr = sort|$arr}
+    {$newArr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [0=>1, 2=>4, 3=>4, 41=>3, 5=>1, 434=>3232]}
+                {$newArr = sort|$arr}
+                {$newArr}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                KeySort
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [
+        0=>1,
+        2=>4,
+        3=>4,
+        41=>3,
+        5=>1,
+        434=>3232
+    ]}
+    {$newArr = KeySort|$arr}
+    {$newArr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [
+                0=>1,
+                2=>4,
+                3=>4,
+                41=>3,
+                5=>1,
+                434=>3232
+                ]}
+                {$newArr = KeySort|$arr}
+                {$newArr}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Values
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [
+        0=>1,
+        2=>4,
+        3=>4,
+        41=>3,
+        5=>1,
+        434=>3232
+    ]}
+    {$newArr = Values|$arr}
+    {$newArr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [
+                0=>1,
+                2=>4,
+                3=>4,
+                41=>3,
+                5=>1,
+                434=>3232
+                ]}
+                {$newArr = Values|$arr}
+                {$newArr}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Unique
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [
+        0=>1,
+        2=>4,
+        3=>4,
+        41=>3,
+        5=>1,
+        434=>3232
+    ]}
+    {$newArr = Unique|$arr}
+    {$newArr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [0=>1, 2=>4, 3=>4, 41=>3, 5=>1, 434=>3232]}
+                {$newArr = Unique|$arr}
+                {$newArr}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Keys
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [
+            0=>1,
+            2=>4,
+            3=>4,
+            41=>3,
+            5=>1,
+            434=>3232
+        ]}
+    {$newArr = Keys|$arr}
+    {$newArr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [0=>1, 2=>4, 3=>4, 41=>3, 5=>1, 434=>3232]}
+                {$newArr = Keys|$arr}
+                {$newArr}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Search
+            </td>
+            <td>
+            <pre class="language-php">
+    {$arr = [
+            0=>1,
+            2=>4,
+            3=>4,
+            41=>3,
+            5=>1,
+            434=>3232
+        ]}
+    {$newArr = Search|$arr, 3}
+    {$newArr}
+        </pre>
+            </td>
+            <td>
+                {$arr = [
+                0=>1,
+                2=>4,
+                3=>4,
+                41=>3,
+                5=>1,
+                434=>3232
+                ]}
+                {$newArr = Search|$arr, 3}
+                Key: {$newArr}
+            </td>
+        </tr>
+    </table>
+</div>
+{/macros}
+
+{body}
+    include{macros}
+{/body}

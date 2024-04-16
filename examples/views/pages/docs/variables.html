@@ -1,0 +1,49 @@
+{metadata}
+    {$title = "Aurora | Setting Variables in the System"}
+    {$description = "To enable dynamic content within templates, the template engine allows you to set variables that can be utilized across all templates. These variables are set using the setVariables method."}
+    {$keywords = "variables, tpl"}
+{/metadata}
+
+{variables}
+<h3>Setting Variables in the System</h3>
+<p>To enable dynamic content within templates, the template engine allows you to set variables that can be utilized across all templates. These variables are set using the setVariables method.</p>
+<h4>Defining Variables</h4>
+<span class="info">Here's how you can define variables for use within your templates:</span>
+
+<pre class="language-php">
+    $templateEngine->setVariables([
+        'lang' => 'en',
+        'title' => 'NLG template engine',
+        // ... other variables
+    ]);
+</pre>
+<p>In the code you've already established, these variables will be accessible and can be integrated throughout the template engine.</p>
+
+<h4>Displaying Variable Values</h4>
+<p>To display the value of a variable within your templates, use the following syntax:</p>
+<pre class="language-html">
+    {layout}
+    <!DOCTYPE html>
+    <html lang="{$lang}">
+    <head>
+
+        <title>{$title}</title>
+        <meta name="description" content="">
+        <meta charset="UTF-8">
+        ...
+    {/layout}
+
+</pre>
+
+<p>This approach renders the respective values of `lang` and `title` variables wherever they are referenced in the template.</p>
+
+<h4>Defining New Variables within Templates</h4>
+<p>
+    Besides pre-defining variables in PHP, it's also possible to define new variables directly within the template files.
+    This feature adds an extra layer of flexibility, allowing for on-the-fly modifications and dynamic content generation based on different conditions or contexts
+</p>
+{/variables}
+
+{body}
+    include{variables}
+{/body}

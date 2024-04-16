@@ -1,0 +1,68 @@
+{metadata}
+    {$title = "Aurora | Setting Directories for Templates and Cache"}
+    {$description = "Setting Directories for Templates and Cache"}
+    {$keywords = "storage, cache, tpl"}
+{/metadata}
+
+{storage}
+<span class="clearfix"></span>
+<h3>Setting Directories for Templates and Cache</h3>
+
+<p>
+    When creating a new instance of the template engine, you can specify the directories for your templates and cache.
+    This is particularly useful if you have a custom project structure.
+</p>
+
+<span class="info">Here's how you can set custom directories:</span>
+<pre class="language-php">
+    $templateEngine = new Aurora\Loader([
+        'views' => '/views',
+        'cache' => '/cache',
+    ]);
+</pre>
+
+<p>
+    In this example, the engine will look for template files (*.html) in the '/templates' directory and store the cache files in the '/cacheStorage' directory.
+</p>
+
+<span class="clearfix"></span>
+
+<h4>Default Settings</h4>
+<p>If you don't specify these directories, the engine will use the default settings:</p>
+<ul>
+    <li><span class="bold">Templates:</span> Looked up in the 'views' directory.</li>
+    <li><span class="bold">Cache:</span> Stored in the 'cache' directory.</li>
+</ul>
+
+<span class="clearfix"></span>
+<p class="georgia">These default settings work well for most basic projects, but you might want to customize them as your project grows.</p>
+
+
+<span class="info">Full snippet:</span>
+<pre class="language-php">
+    <?php
+
+    require_once "../src/aurora.php";
+
+    $templateEngine = new Aurora\Loader([
+        'views' => '/views',
+        'cache' => '/cache',
+    ]);
+
+    $templateEngine->setFiles([
+	    'index.html'
+    ]);
+
+    $templateEngine->createCache(true);
+
+    print $templateEngine->render("layout");
+
+</pre>
+
+
+<span class="clearfix"></span>
+{/storage}
+
+{body}
+    include{storage}
+{/body}

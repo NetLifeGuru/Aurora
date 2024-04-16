@@ -1,0 +1,22 @@
+{header}
+    <div class="background"></div>
+    <header>
+        <div class="container">
+            <h1><a href="{$domain}">Aurora TPL</a></h1>
+            <nav>
+
+                {$list = [
+                    "/" => "Simple Web",
+                    "/examples" => "Examples",
+                    "/single-page.php" => "Single page",
+                ]}
+
+                <ul>
+                    {foreach $list as $url => $name}
+                        <li><a class="{$isActive|$url}" href="{$url}">{$name}</a></li>
+                    {/foreach}
+                </ul>
+            </nav>
+        </div>
+    </header>
+{/header}
