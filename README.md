@@ -14,14 +14,41 @@ This project is a powerful and efficient one-file PHP template engine designed t
 To get started with this template engine, simply include the PHP file in your project and follow the basic usage instructions below to render your first template.
 
 ### Basic Usage
-```php
-$aurora = new Aurora\Loader();
 
-$aurora->setFiles([
-    'index.html'
+- index.php
+```php
+require_once("/src/aurora.php");
+
+$aurora = new Aurora\Loader([
+    'root'  => getcwd() . '/../',
+    'views' => '/views',
+    'cache' => '/cache',
 ]);
 
-echo $aurora->render('layout');
+$aurora->setFiles([
+    '/layout.html',
+]);
+
+$aurora->setLanguageConstants([
+    'hello world' => 'Hello World',
+]);
+
+$aurora->setVariables([
+    'lang' => 'en',
+    'title' => 'Aurora Single Page',
+    'year' => date("Y")
+]);
+
+$aurora->createCache(false);
+
+print $aurora->render("layout");
+```
+
+- views/layout.html
+```php
+{layout}
+    Hello World
+{/layout}
 ```
 For detailed configuration options and advanced features, please refer to the documentation provided.
 
