@@ -13,7 +13,7 @@
 
                 <ul>
                     {foreach $list as $url => $name}
-                        <li><a class="{$isActive|$url}" href="{$url}">{$name}</a></li>
+                        <li><a class="{$isActive|$url}" href="{$url}">{$isActive}{$name}</a></li>
                     {/foreach}
                 </ul>
             </nav>

@@ -43,7 +43,6 @@ $aurora->setRoutes([
         '/pages/docs/customForms.html',
         '/pages/docs/customPHPForms.html',
         '/pages/docs/curlyBrackets.html',
-        '/pages/docs/errorHandling.html',
     ]
 ]);
 

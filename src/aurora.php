@@ -1062,7 +1062,7 @@ class templateMacros extends forms implements templateMacrosInterface
 
     public function IsActive(string $url): string
     {
-        $url = ($url === '/') ? '' : $url;
+        $url = trim($url, "/");
 
         $uri = $_SERVER['REQUEST_URI'];
         $path = parse_url($uri, PHP_URL_PATH);
