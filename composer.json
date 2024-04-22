@@ -16,5 +16,7 @@
             "name": "Martin Benadik",
             "email": "martinbenadik@gmail.com"
         }
-    ]
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
