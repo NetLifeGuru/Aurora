@@ -24,7 +24,7 @@
  */
 declare(strict_types=1);
 
-namespace Aurora;
+namespace Nlg\Aurora;
 
 use Closure;
 use Exception;
@@ -2176,7 +2176,7 @@ class Loader extends templateMacros implements TemplateInterface
                 $interfaceName = "interface_" . $className;
                 $interface = "interface $interfaceName {\n\t" . implode("\n\t", $interfaceMethods) . "\n}";
 
-                $fn = "<?php\n/*filename:" . $fileName . "*/\nnamespace Aurora;\n$interface\nclass $className extends Loader implements $interfaceName {\n\n$constructor\n\n" . $methods . "}";
+                $fn = "<?php\n/*filename:" . $fileName . "*/\nnamespace Nlg\Aurora;\n$interface\nclass $className extends Loader implements $interfaceName {\n\n$constructor\n\n" . $methods . "}";
 
                 /**
                  * Removing empty lines from source code
@@ -2349,7 +2349,7 @@ class Loader extends templateMacros implements TemplateInterface
 
                     $name = $this->createClassNameFromFileName($file);
                     $files = $this->getFile($name);
-                    $className = 'Aurora\\' . $name;
+                    $className = 'Nlg\Aurora\\' . $name;
 
                     if (empty($files[0]) && $cacheCreated === false) {
                         $this->createCache(!$this->productionMode);

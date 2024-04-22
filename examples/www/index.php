@@ -2,7 +2,7 @@
 
 require_once "../../src/aurora.php";
 
-$aurora = new Aurora\Loader([
+$aurora = new Nlg\Aurora\Loader([
     'root'  =>  getcwd() . '/../',
     'views' => '/views',
     'cache' => '/cache',

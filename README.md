@@ -19,7 +19,7 @@ To get started with this template engine, simply include the PHP file in your pr
 ```php
 require_once("/src/aurora.php");
 
-$aurora = new Aurora\Loader([
+$aurora = new Nlg\Aurora\Loader([
     'root'  => getcwd() . '/../',
     'views' => '/views',
     'cache' => '/cache',
