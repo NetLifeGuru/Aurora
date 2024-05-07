@@ -4,53 +4,12 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db7a7063ed08029b313017ca01878405",
-    "packages": [
-        {
-            "name": "nlg/aurora",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/NetLifeGuru/Aurora.git",
-                "reference": "22c0214ab7f25845b581090e0bd6b0cd2b3abe6e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/NetLifeGuru/Aurora/zipball/22c0214ab7f25845b581090e0bd6b0cd2b3abe6e",
-                "reference": "22c0214ab7f25845b581090e0bd6b0cd2b3abe6e",
-                "shasum": ""
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Nlg\\Aurora\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Martin Benadik",
-                    "email": "martinbenadik@gmail.com"
-                }
-            ],
-            "description": "Aurora is a powerful and efficient one-file PHP template engine designed to simplify web development. It requires no external dependencies and offers a straightforward setup process, making it ideal for projects that benefit from a lightweight, easy-to-deploy solution.",
-            "support": {
-                "issues": "https://github.com/NetLifeGuru/Aurora/issues",
-                "source": "https://github.com/NetLifeGuru/Aurora/tree/main"
-            },
-            "time": "2024-05-07T08:56:42+00:00"
-        }
-    ],
+    "content-hash": "ebc654e9c6a087ddc1b4aaaf7714ddff",
+    "packages": [],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "nlg/aurora": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
