@@ -15,5 +15,10 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "php": ">=8.2"
+    },
+    "archive": {
+        "exclude": ["examples/", "*.md", "tests/", "docs/"]
+    }
 }
