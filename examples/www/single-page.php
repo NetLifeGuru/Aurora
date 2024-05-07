@@ -1,5 +1,5 @@
 <?php
-require_once("../../src/aurora.php");
+require_once("../../src/Loader.php");
 
 $aurora = new Nlg\Aurora\Loader([
     'root'  => getcwd() . '/../',
