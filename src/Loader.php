@@ -1413,16 +1413,14 @@ class Loader extends templateMacros implements TemplateInterface
 
         if (!is_dir($this->cacheDirectory)) {
             mkdir($this->cacheDirectory, 0755);
-            chmod($this->cacheDirectory, 0755);
         }
 
         if (!is_dir($this->workingDirectory)) {
             mkdir($this->workingDirectory, 0755);
-            chmod($this->workingDirectory, 0755);
         }
 
-        chmod($this->cacheDirectory, 0744);
-        chmod($this->workingDirectory, 0744);
+        chmod($this->cacheDirectory, 0755);
+        chmod($this->workingDirectory, 0755);
     }
 
     /**
@@ -2041,8 +2039,6 @@ class Loader extends templateMacros implements TemplateInterface
         $content = implode("\n", $contents);
 
         $function = "public function render_" . $name . "(): string \n{\n\n\t\n{content}\n}\n\n";
-
-        preg_match_all('/data-(?:if|foreach|array|switch)={(.*?)}/', $content, $match, PREG_SET_ORDER);
 
         $content = $this->resolveInclude($content);
         $content = $this->resolveSourceSnippets($fileContent, $content);

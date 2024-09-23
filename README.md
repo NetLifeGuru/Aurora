@@ -17,7 +17,7 @@ To get started with this template engine, simply include the PHP file in your pr
 
 - index.php
 ```php
-require_once("/src/aurora.php");
+require __DIR__ . '/vendor/autoload.php';
 
 $aurora = new Nlg\Aurora\Loader([
     'root'  => getcwd() . '/../',
