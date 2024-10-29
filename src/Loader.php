@@ -1441,16 +1441,16 @@ class Loader extends templateMacros implements TemplateInterface
 
         if (empty($this->workingFiles)) {
             if (!$this->productionMode) {
-                $err[] = "No input template files are specified for processing!";
+                $err[] = 'No input template files are specified for processing!';
             }
         }
 
         foreach ($this->workingFiles as $file) {
             $fullPath = $this->workingDirectory . trim($file, '/');
             if (preg_match('/([^\w\/._-]+)/', $file)) {
-                $err[] = $file . ": path contains illegal characters!";
+                $err[] = $file . ': path contains illegal characters!';
             } else if (!file_exists($fullPath)) {
-                $err[] = $file . " file doesn't exist!<br />";
+                $err[] = $file . ' file does not exist!<br />';
             } else {
 
                 $content = file_get_contents($fullPath);
@@ -1552,7 +1552,7 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private function resolveResetVariable(string $variable): string
     {
-        $cleanVariable = preg_replace("/\[\s*]$/", '', $variable);
+        $cleanVariable = preg_replace('/\[\s*]$/', '', $variable);
 
         return "\t" . $cleanVariable . ' = ' . trim($cleanVariable) . ' ?? ' . (($variable !== $cleanVariable) ? '[]' : 'null') . ';';
     }
@@ -1564,7 +1564,7 @@ class Loader extends templateMacros implements TemplateInterface
     private function resolveSnippetVariables(string $snippet): array
     {
 
-        if (preg_match("/^`([\s\S]+)`$/m", $snippet, $m)) {
+        if (preg_match('/^`([\s\S]+)`$/m', $snippet, $m)) {
             //language
             return [$snippet => '$this->macroLang("' . str_replace('"', '\"', $m[1]) . '")'];
         }
@@ -1617,14 +1617,14 @@ class Loader extends templateMacros implements TemplateInterface
                      * than variable will be printed
                      */
 
-                    if ($snippet == $variable[0] . ";") {
+                    if ($snippet == $variable[0] . ';') {
                         $replace[$variable[0]] = "\$html .= \$this->macroPrint($newVariable)";
                     } else {
                         $replace[$variable[0]] = $newVariable;
                     }
                 }
             }
-        } else if (preg_match("/^[^|{}]*$/", $snippet)) {
+        } else if (preg_match('/^[^|{}]*$/', $snippet)) {
             return [$snippet => "'" . trim($snippet, '\'"') . "'"];
         }
 
@@ -1637,7 +1637,7 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private function excludeQuotationMarks(string $snippet): string
     {
-        return preg_replace("/[\"|']([\s\S]+)[\"|']/", '', $snippet);
+        return preg_replace('/["|\']([\s\S]+)["|\']/', '', $snippet);
     }
 
     /**
@@ -1700,13 +1700,13 @@ class Loader extends templateMacros implements TemplateInterface
 
                 if ($controlStructure == 'else') {
                     /**
-                     * changing of the simple "else" to the "\} else \{"
+                     * changing of the simple "else" to else with curly brackets
                      */
                     $r[$construct[0]] = "} $controlStructure {";
                 } else {
                     if (preg_match('/^else\s*if/', $controlStructure)) {
                         /**
-                         * fix structure elseif to "\} else if \{"
+                         * fix structure elseif to else if with curly brackets
                          */
                         $controlStructure = "} $controlStructure";
                     }
@@ -1749,7 +1749,7 @@ class Loader extends templateMacros implements TemplateInterface
     /**
      * @var string
      */
-    public $fileContent = "";
+    public $fileContent = '';
 
     /**
      * @param string $fileContent
@@ -1758,7 +1758,7 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private function sourceCodeLines(string $fileContent, string $source): string
     {
-        if (!isset($this->snippetInSourceOccurrences[$source]) && !preg_match("/^\//", $source)) {
+        if (!isset($this->snippetInSourceOccurrences[$source]) && !preg_match('/^\//', $source)) {
             if (count(explode("\n", $source)) === 1) {
                 /**
                  * Searching single line occurrences
@@ -1776,13 +1776,13 @@ class Loader extends templateMacros implements TemplateInterface
                 $pos = strpos($this->fileContent, $source);
 
                 if ($pos !== false) {
-                    $this->fileContent = substr_replace($this->fileContent, "<------>" . str_repeat(PHP_EOL, substr_count($source, PHP_EOL)), $pos, strlen($source));
+                    $this->fileContent = substr_replace($this->fileContent, '<------>' . str_repeat(PHP_EOL, substr_count($source, PHP_EOL)), $pos, strlen($source));
 
                     $lines = explode("\n", $this->fileContent);
 
                     $lineNumber = 1;
                     foreach ($lines as $line) {
-                        if (str_contains($line, "<------>")) {
+                        if (str_contains($line, '<------>')) {
                             $this->snippetInSourceOccurrences[$source][] = $lineNumber;
                             break;
                         }
@@ -1826,12 +1826,12 @@ class Loader extends templateMacros implements TemplateInterface
          *  - macros
          */
 
-        if (preg_match("/^`([\s\S]+)`$/m", $source, $m)) {
+        if (preg_match('/^`([\s\S]+)`$/m', $source, $m)) {
             //language
             return '$html .= $this->macroLang("' . str_replace('"', '\"', $m[1]) . '");';
-        } else if (preg_match("/(.*?)\?(.*):(.*)|(.*)\?(.*)/", $this->excludeQuotationMarks(str_replace(["\n", "\r"], " ", $source)))) {
+        } else if (preg_match('/(.*?)\?(.*):(.*)|(.*)\?(.*)/', $this->excludeQuotationMarks(str_replace(["\n", "\r"], ' ', $source)))) {
             // ternary operator
-            preg_match("/(.*?)\?(.*):(.*)|(.*)\?(.*)/", str_replace(["\n", "\r"], " ", $source), $m);
+            preg_match('/(.*?)\?(.*):(.*)|(.*)\?(.*)/', str_replace(["\n", "\r"], ' ', $source), $m);
             $m = array_values(array_filter($m));
             $m[2] = $m[2] ?? "''";
             $m[3] = $m[3] ?? "''";
@@ -1862,7 +1862,7 @@ class Loader extends templateMacros implements TemplateInterface
                         $replace = [];
                         foreach ($sourceMatches[0] as $sourceMatch) {
                             $trimmedSourceMatch = trim($sourceMatch, '{}');
-                            preg_match("/^`([\s\S]+)`$/m", $trimmedSourceMatch, $langMatch);
+                            preg_match('/^`([\s\S]+)`$/m', $trimmedSourceMatch, $langMatch);
                             $r = $this->resolveSnippetVariables($value);
 
                             if (!empty($langMatch[1])) {
@@ -1882,12 +1882,12 @@ class Loader extends templateMacros implements TemplateInterface
 
             return '$html .= (' . trim($m[1]) . ') ? ' . $m[2] . ':' . $m[3] . ';';
 
-        } else if (preg_match("/^(input|textarea|select|checkbox|radio)(.*)/m", str_replace(["\n", "\r"], " ", $source), $formMatch)) {
+        } else if (preg_match('/^(input|textarea|select|checkbox|radio)(.*)/m', str_replace(["\n", "\r"], ' ', $source), $formMatch)) {
             //forms
 
             /**
              * Forms will being extracted here
-             * the regular expression "/^(input|textarea|select|checkbox|radio)(.*)/m" is extracting form snippets from source in form {input name="test" value="1" isInvalid}
+             * the regular expression '/^(input|textarea|select|checkbox|radio)(.*)/m' is extracting form snippets from source in form {input name="test" value="1" isInvalid}
              */
 
             $data = trim($formMatch[2]);
@@ -1899,7 +1899,7 @@ class Loader extends templateMacros implements TemplateInterface
             $boolParameters['isChecked'] = (int)str_contains($data, 'isChecked');
 
             // .\w+(=(.*?))
-            preg_match_all("/(\w+)\s*=\s*(['\"])(.*?)\\2/", $data, $matches);
+            preg_match_all('/(\w+)\s*=\s*([\'"])(.*?)\\2/', $data, $matches);
 
             $attributes = [];
             for ($i = 0; $i < count($matches[1]); $i++) {
@@ -1914,7 +1914,7 @@ class Loader extends templateMacros implements TemplateInterface
              * resolving snippets from source and defining variables and converting variables to the template engine variables
              * for fixing variables is calling function resolveSnippetVariables
              */
-            foreach (["id", "class", "label", "error", "type", "value", "title", "placeholder", "info", "selected", "checked", "data", "aria-label", "rel"] as $name) {
+            foreach (['id', 'class', 'label', 'error', 'type', 'value', 'title', 'placeholder', 'info', 'selected', 'checked', 'data', 'aria-label', 'rel'] as $name) {
                 if (!empty($attributes[$name])) {
                     $n = trim($attributes[$name], '"');
                     $arr = $this->resolveSnippetVariables($n);
@@ -1934,7 +1934,7 @@ class Loader extends templateMacros implements TemplateInterface
 
             return '$html .= $this->macroForm' . ucfirst($formMatch[1]) . "([\n" . implode("\n", $response) . "\n]);";
 
-        } else if (!str_starts_with($source, "block") && preg_match('/(\$\w+.?=.?)?(\w+(?:\|\w+)*\|\$?[\S\s]+)/', $source, $match)) {
+        } else if (!str_starts_with($source, 'block') && preg_match('/(\$\w+.?=.?)?(\w+(?:\|\w+)*\|\$?[\S\s]+)/', $source, $match)) {
 
             // macros
             /**
@@ -1942,7 +1942,7 @@ class Loader extends templateMacros implements TemplateInterface
              * regular expression /\w+(?:\|\w+)*\|\$?\S+/ is searching for occurrence of the char | between curly braces {} and last of the chain string should import a variable in form $value
              */
 
-            $fn = explode("|", $match[2]);
+            $fn = explode('|', $match[2]);
 
             $c = count($fn) - 1;
             for ($i = 0; $i < $c; $i++) {
@@ -1951,7 +1951,7 @@ class Loader extends templateMacros implements TemplateInterface
             $value = trim(end($fn));
 
             $macrosInputs = [];
-            foreach (explode(",", $value) as $v) {
+            foreach (explode(',', $value) as $v) {
                 $arr = $this->resolveSnippetVariables($v);
                 $newValue = trim($arr[$v] ?? '');
                 if (is_numeric(trim($newValue, "'"))) {
@@ -2015,7 +2015,7 @@ class Loader extends templateMacros implements TemplateInterface
                 $sourceCode = $this->createMacro($source, $sourceCode);
                 $line = $this->sourceCodeLines($fileContent, $source);
 
-                $replace = "{/view}" . $line . "\t" . $sourceCode . "{view}";
+                $replace = '{/view}' . $line . "\t" . $sourceCode . '{view}';
                 $search = '{' . $source . '}';
 
                 $pos = strpos($newSource, $search);
@@ -2038,7 +2038,7 @@ class Loader extends templateMacros implements TemplateInterface
     {
         $content = implode("\n", $contents);
 
-        $function = "public function render_" . $name . "(): string \n{\n\n\t\n{content}\n}\n\n";
+        $function = "public function render_$name(): string \n{\n\n\t\n{content}\n}\n\n";
 
         $content = $this->resolveInclude($content);
         $content = $this->resolveSourceSnippets($fileContent, $content);
@@ -2052,7 +2052,7 @@ class Loader extends templateMacros implements TemplateInterface
 
             if (preg_match('/(if|else|foreach|\{)/', $check)) {
 
-                $content = "\$html = '';\n" . $content . "\n\treturn \$html;";
+                $content = "\$html = '';\n$content\n\treturn \$html;";
 
 
             } else {
@@ -2061,9 +2061,9 @@ class Loader extends templateMacros implements TemplateInterface
                 $i = count($m[0]);
 
                 if ($i == 1) {
-                    $content = substr_replace($content, 'return', $pos, strlen('$html .=')) . "";
+                    $content = substr_replace($content, 'return', $pos, strlen('$html .='));
                 } else {
-                    $content = substr_replace($content, '$html =', $pos, strlen('$html .=')) . "";
+                    $content = substr_replace($content, '$html =', $pos, strlen('$html .='));
                     $content .= "\n\treturn \$html;";
                 }
             }
@@ -2155,7 +2155,7 @@ class Loader extends templateMacros implements TemplateInterface
                     $method[] = $this->createNewFunction($content, $name, $contents);
                 }
 
-                $constructor = "public function fileName():string \n{\n\treturn '" . $fileName . "';\n}\n public function init(array \$params = [], array \$lang = []): void \n{\n\t\$this->lang = \$lang;\n\n\t\$this->val = \$params;\n" . implode("\n", $this->reset) . "\n\n}";
+                $constructor = "public function fileName():string \n{\n\treturn '$fileName';\n}\n public function init(array \$params = [], array \$lang = []): void \n{\n\t\$this->lang = \$lang;\n\n\t\$this->val = \$params;\n" . implode("\n", $this->reset) . "\n\n}";
                 $methods = implode("\n", $method);
 
                 preg_match_all('/public function render_(.*)/', $methods, $allMethodNames, PREG_PATTERN_ORDER);
@@ -2169,15 +2169,15 @@ class Loader extends templateMacros implements TemplateInterface
                     }
                 }
 
-                $interfaceName = "interface_" . $className;
+                $interfaceName = 'interface_' . $className;
                 $interface = "interface $interfaceName {\n\t" . implode("\n\t", $interfaceMethods) . "\n}";
 
-                $fn = "<?php\n/*filename:" . $fileName . "*/\nnamespace Nlg\Aurora;\n$interface\nclass $className extends Loader implements $interfaceName {\n\n$constructor\n\n" . $methods . "}";
+                $fn = "<?php\n/*filename:$fileName*/\nnamespace Nlg\Aurora;\n$interface\nclass $className extends Loader implements $interfaceName {\n\n$constructor\n\n$methods}";
 
                 /**
                  * Removing empty lines from source code
                  */
-                $fn = preg_replace("/^[ \t]*\r?\n/m", "", $fn);
+                $fn = preg_replace('/^[ \t]*\r?\n/m', '', $fn);
 
                 $excludedSource['\u007b'] = '{';
                 $excludedSource['\u007d'] = '}';
@@ -2218,7 +2218,7 @@ class Loader extends templateMacros implements TemplateInterface
                 if ($route === '*') continue;
 
                 foreach ($templates as $value) {
-                    if (preg_match("/\*\.(\S+)$/", $value)) {
+                    if (preg_match('/\*\.(\S+)$/', $value)) {
 
                         $files = glob($this->workingDirectory . $value);
                         $templates = [];
@@ -2277,7 +2277,7 @@ class Loader extends templateMacros implements TemplateInterface
             $path = parse_url($uri, PHP_URL_PATH) ?? '/';
             $segments = explode('/', trim($path, '/'));
 
-            return !empty($segments[0]) ? $segments[0] : "";
+            return !empty($segments[0]) ? $segments[0] : '';
 
         } else {
 
@@ -2340,7 +2340,7 @@ class Loader extends templateMacros implements TemplateInterface
         $cacheCreated = false;
         try {
             foreach ($this->workingFiles as $key => $file) {
-                $fullPath = $this->workingDirectory . trim($file, "/");
+                $fullPath = $this->workingDirectory . trim($file, '/');
                 if (file_exists($fullPath)) {
 
                     $name = $this->createClassNameFromFileName($file);
@@ -2442,13 +2442,13 @@ class Loader extends templateMacros implements TemplateInterface
             } else {
 
                 $fileName = $instance->fileName();
-                $blocks[$fileName][] = "<strong>" . $fileName . "</strong>";
+                $blocks[$fileName][] = '<strong>' . $fileName . '</strong>';
 
                 $methods = get_class_methods($instance);
                 foreach ($methods as $method) {
-                    if (str_starts_with($method, "render_")) {
+                    if (str_starts_with($method, 'render_')) {
                         $block = str_replace('render_', '', $method);
-                        $blocks[$fileName][] = "<span>{" . $block . "}</span>";
+                        $blocks[$fileName][] = '<span>{' . $block . '}</span>';
                     }
                 }
             }
