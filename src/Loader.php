@@ -2222,7 +2222,7 @@ class Loader extends templateMacros implements TemplateInterface
 
                         $files = glob($this->workingDirectory . $value);
                         $templates = [];
-                        foreach($files as $file) {
+                        foreach ($files as $file) {
                             $templates[] = str_replace($this->workingDirectory, '', $file);
                         }
                     }
