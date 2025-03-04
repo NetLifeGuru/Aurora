@@ -34,9 +34,9 @@ use Throwable;
 trait ErrorHandling
 {
     /**
-     * @var
+     * @var string
      */
-    protected $workingDirectory;
+    protected string $workingDirectory;
 
     /**
      * @param string $file
@@ -277,7 +277,7 @@ trait ErrorHandling
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link rel="icon" type="image/x-icon" href=" data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400;1,500&display=swap" rel="stylesheet"> 
+	<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400;1,500&display=swap" rel="stylesheet">
 	<style>
 		html {
 		  line-height: 2;
@@ -296,7 +296,7 @@ trait ErrorHandling
 		  margin: 0;
 		  padding: 0;
 		}
-		
+
 		/* Form elements */
 		button, input, select, textarea {
 		  font-family: inherit;
@@ -307,7 +307,7 @@ trait ErrorHandling
 		button, input {
 		  overflow: visible;
 		}
-		
+
 		/* Specific element adjustments */
 		details, main {
 		  display: block;
@@ -319,7 +319,7 @@ trait ErrorHandling
 		  font-family: monospace, monospace;
 		  font-size: 1em;
 		}
-		
+
 		/* Links and abbreviations */
 		a {
 		  background-color: transparent;
@@ -329,7 +329,7 @@ trait ErrorHandling
 		  border-bottom: none;
 		  text-decoration: underline;
 		}
-		
+
 		/* Styling for bold and italic text */
 		b, strong {
 		  font-weight: bolder;
@@ -338,7 +338,7 @@ trait ErrorHandling
 		  font-family: Georgia, serif;
 		  font-size: 13px;
 		}
-		
+
 		/* Small, Sub and Sup adjustments */
 		small {
 		  font-size: 80%;
@@ -355,12 +355,12 @@ trait ErrorHandling
 		sup {
 		  top: -0.5em;
 		}
-		
+
 		/* Image styling */
 		img {
 		  border-style: none;
 		}
-		
+
 		/* Table and pre styling */
 		table.sourceCode, pre {
           border-collapse: collapse;
@@ -400,7 +400,7 @@ trait ErrorHandling
 		table.sourceCode tr > td:nth-child(2) {
 		  padding: 10px;
 		}
-		
+
 		/* Layout adjustments */
 		body > section {
 		  float: left;
@@ -565,7 +565,7 @@ class polymorphismPattern implements polymorphismPatternInterface
      * @param bool $startingBlock
      * @return string
      */
-    protected function renderBlock(string $methodName, array &$params, $passingByReference = false, $startingBlock = false): string
+    protected function renderBlock(string $methodName, array &$params, bool $passingByReference = false, bool $startingBlock = false): string
     {
         return '';
     }
@@ -783,7 +783,7 @@ interface templateMacrosInterface
      * @param array|string $value
      * @return string
      */
-    public function Print($value): string;
+    public function Print(array|string $value): string;
 
     /**
      * @param string $value
@@ -950,6 +950,8 @@ class templateMacros extends forms implements templateMacrosInterface
 {
     use ErrorHandling;
 
+    public ?object $macros = null;
+
     public function __construct()
     {
         $macroClass = 'Macros';
@@ -969,8 +971,6 @@ class templateMacros extends forms implements templateMacrosInterface
         'FormRadio' => [],
         'FormCheckbox' => ['id', 'class', 'value', 'title', 'placeholder', 'info', 'data', 'aria-label', 'rel']
     ];
-
-    public $macros;
 
     /**
      * @param $method
@@ -1034,7 +1034,7 @@ class templateMacros extends forms implements templateMacrosInterface
      * @param array|string $value
      * @return string
      */
-    public function Print($value): string
+    public function Print(mixed $value): string
     {
         if ($value === null) {
             $value = "";
@@ -1301,31 +1301,31 @@ class Loader extends templateMacros implements TemplateInterface
     /**
      * @var mixed
      */
-    public $val;
+    public mixed $val;
     /**
      * @var mixed|string
      */
-    protected $workingDirectory;
+    protected string $workingDirectory;
     /**
-     * @var
+     * @var array
      */
-    private $workingFiles;
+    private array $workingFiles;
     /**
-     * @var
+     * @var array
      */
-    protected $languageConstants;
+    protected array $languageConstants;
     /**
-     * @var
+     * @var array
      */
-    private $routes;
+    private array $routes;
     /**
      * @var mixed|string
      */
-    private $cacheDirectory;
+    private mixed $cacheDirectory;
     /**
-     * @var
+     * @var array
      */
-    private $templateVariables = [];
+    private array $templateVariables = [];
     /**
      * @var array
      */
@@ -1335,13 +1335,13 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private array $reset = [];
     /**
-     * @var $workingUrl
+     * @var string $workingUrl
      */
-    public $workingUrl;
+    public string $workingUrl;
     /**
      * @var bool
      */
-    protected $productionMode = true;
+    protected bool $productionMode = true;
 
     /**
      * @param array $setup
@@ -1385,7 +1385,7 @@ class Loader extends templateMacros implements TemplateInterface
                 $this->errors(500, [
                     'title' => '<h1>Ownership Change Required</h1>',
                     'content' => '
-                        Please change the files and directories owner. 
+                        Please change the files and directories owner.
                         <br />
                         <strong>You can use the next source code in your project directory</strong>
 <pre>
@@ -1577,12 +1577,16 @@ class Loader extends templateMacros implements TemplateInterface
         /**
          * getting all variables
          */
-        preg_match_all('/(\$\w+->\w+|\$\w+)(?!=.*\[)+/sm', preg_replace('/(?<![=>])=(?!=)/', ' = ', $snippet), $values, PREG_SET_ORDER);
+        preg_match_all('/(\$\w+->\w+|\$\w+)+/m', $snippet, $values, PREG_SET_ORDER);
 
         /**
          * Merging Arrays and Variables to one Array
          */
         $arr = array_merge($arrays, $values);
+
+        /**
+         * Creating New Variables
+         */
         if (!empty($arr)) {
             foreach ($arr as $variable) {
                 preg_match_all('/\w+/', $variable[1], $match, PREG_PATTERN_ORDER);
@@ -1745,11 +1749,11 @@ class Loader extends templateMacros implements TemplateInterface
     /**
      * @var int
      */
-    public $lastLine = 0;
+    public int $lastLine = 0;
     /**
      * @var string
      */
-    public $fileContent = '';
+    public string $fileContent = '';
 
     /**
      * @param string $fileContent
@@ -2036,6 +2040,7 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private function createNewFunction(string $fileContent, string $name, array $contents): string
     {
+
         $content = implode("\n", $contents);
 
         $function = "public function render_$name(): string \n{\n\n\t\n{content}\n}\n\n";
@@ -2407,7 +2412,7 @@ class Loader extends templateMacros implements TemplateInterface
      * @return string
      * @throws Exception
      */
-    protected function renderBlock(string $methodName, array &$params, $passingByReference = false, $startingBlock = false): string
+    protected function renderBlock(string $methodName, array &$params, bool $passingByReference = false, bool $startingBlock = false): string
     {
         $originalParameters = $params;
         $result = '';
