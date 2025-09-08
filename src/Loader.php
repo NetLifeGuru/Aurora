@@ -46,7 +46,7 @@ trait ErrorHandling
      */
     protected function catchingError(string $file, int $line, string $message): void
     {
-        preg_match('/\/\*filename:(.*?)\*\//s', file_get_contents($file), $m);
+        preg_match("/<?php\n\/\*filename:(.*?)\*\//", file_get_contents($file), $m);
         if (!empty($m[1])) {
 
             list($startLine, $endLine, $sourceLines) = $this->gettingErrorLinesOccurrence($file, $line);
@@ -98,15 +98,12 @@ trait ErrorHandling
             $arr[$key] = preg_replace('/(\/\/+)/', '/', $arr[$key]);
         }
 
-        $errorFile = [];
-        if (is_readable($arr['source'])) {
-            $errorFile = array_merge([''], file($arr['source']));
-        }
+        $errorFile = array_merge([''], file($arr['source']));
 
         $tplSourceLines = [];
         if (!empty($arr["startLine"]) && !empty($arr["endLine"]))
             for ($i = $arr["startLine"]; $i <= $arr["endLine"]; $i++) {
-                if (!empty($errorFile) && isset($errorFile[$i])) {
+                if (isset($errorFile[$i])) {
                     $tplSourceLines[$i] = trim($errorFile[$i]);
                 }
             }
@@ -117,11 +114,8 @@ trait ErrorHandling
             $line = ": " . $arr["startLine"];
         }
 
-        $wd = defined('workingDirectory') ? workingDirectory : ($this->workingDirectory ?? '');
-        if ($wd !== '') {
-            foreach (['message', 'source', 'phpFile'] as $key) {
-                $arr[$key] = str_replace($wd, '', $arr[$key]);
-            }
+        foreach (['message', 'source', 'phpFile'] as $key) {
+            $arr[$key] = str_replace(workingDirectory, '', $arr[$key]);
         }
 
         $message =
@@ -181,15 +175,15 @@ trait ErrorHandling
     /**
      * @param int $statusCode
      * @param array $errors
-     * @param string $lang
-     * @param string $title
      * @return void
      */
-    protected function errors(int $statusCode, array $errors, string $lang = 'en', string $title = ''): void
+    protected function errors(int $statusCode, array $errors): void
     {
-        if ($errors) {
-            header(self::httpStatus($statusCode));
-            print $this->template($lang, $title, '<div class="center-content">' . implode("\n", $errors) . '</div>');
+        if (!empty($errors)) {
+            $status = $this->httpStatus($statusCode);
+
+            header($status);
+            print $this->template($lang ?? 'en', $title ?? '', '<div class="center-content">' . implode("\n", $errors) . '</div>');
             exit;
         }
     }
@@ -243,9 +237,27 @@ trait ErrorHandling
             505 => '505 HTTP Version Not Supported',
         ];
 
-        $text = $httpStatuses[$status] ?? $httpStatuses[404];
-        $protocol = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
-        return $protocol . ' ' . $text;
+        return ($_SERVER['SERVER_PROTOCOL'] ?? '') . ' ' . ($httpStatuses[$status] ?? $httpStatuses['404']);
+    }
+
+    /**
+     * @param array $props
+     * @return never
+     */
+    public function terminate(array $props = []): never
+    {
+        $title = $props['title'] ?? null;
+        $content = $props['content'] ?? null;
+        $header = $props['header'] ?? '404';
+        $lang = $props['lang'] ?? 'en';
+
+        $status = $this->httpStatus($header);
+
+        header($status);
+
+        print $this->template($lang ?? 'en', $title ?? '', $content ?? '');
+
+        exit;
     }
 
     /**
@@ -565,7 +577,7 @@ class forms extends polymorphismPattern implements formsInterface
     /**
      * @var array
      */
-    public static array $RewriteFormElements = [];
+    public static array $RewriteFormElements;
 
     /**
      * @param Closure $fn
@@ -624,22 +636,18 @@ class forms extends polymorphismPattern implements formsInterface
             if (isset(self::$RewriteFormElements["Input"])) {
                 $html .= self::$RewriteFormElements["Input"]($attr);
             } else {
-                $isHidden = (bool)($attr['isHidden'] ?? false);
-                $isInvalid = (bool)($attr['isInvalid'] ?? false);
-                $isRequired = (bool)($attr['isRequired'] ?? false);
-                $isReadOnly = (bool)($attr['isReadOnly'] ?? false);
-                if ($isHidden) {
+                if ($attr['isHidden']) {
                     $html .= '<input type="hidden" ' . $attr['chain'] . '>';
                 } else {
-                    $html .= '<div class="form-control form-input' . ($isInvalid ? ' invalid' : '') . '">';
+                    $html .= '<div class="form-control form-input' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
                     $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
-                    $html .= '<input ' . $attr['chain'] . ' ' . ($isRequired ? 'required' : '') . ' ' . ($isReadOnly ? 'readonly' : '') . ' >';
+                    $html .= '<input ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' >';
                     $html .= $this->displayInfoAndError($attr);
                     $html .= '</div>';
                 }
             }
         } else {
-            $html .= $input;
+            $html = $input;
         }
     }
 
@@ -654,20 +662,16 @@ class forms extends polymorphismPattern implements formsInterface
         $textarea = $this->renderBlock('render_Textarea', $attr);
         if (empty($textarea)) {
             if (isset(self::$RewriteFormElements["Textarea"])) {
-                $html .= self::$RewriteFormElements["Textarea"]($attr);
+                $html = self::$RewriteFormElements["Textarea"]($attr);
             } else {
-                $isInvalid = (bool)($attr['isInvalid'] ?? false);
-                $isRequired = (bool)($attr['isRequired'] ?? false);
-                $isReadOnly = (bool)($attr['isReadOnly'] ?? false);
-                $html .= '<div class="form-control form-textarea' . ($isInvalid ? ' invalid' : '') . '">';
+                $html .= '<div class="form-control form-textarea' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
                 $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
-                $value = $attr['value'] ?? '';
-                $html .= '<textarea ' . $attr['chain'] . ' ' . ($isRequired ? 'required' : '') . ' ' . ($isReadOnly ? 'readonly' : '') . '>' . $value . '</textarea>';
+                $html .= '<textarea ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' >' . $attr['value'] . '</textarea>';
                 $html .= $this->displayInfoAndError($attr);
                 $html .= '</div>';
             }
         } else {
-            $html .= $textarea;
+            $html = $textarea;
         }
     }
 
@@ -681,18 +685,14 @@ class forms extends polymorphismPattern implements formsInterface
         $select = $this->renderBlock('render_Select', $attr);
         if (empty($select)) {
             if (isset(self::$RewriteFormElements["Select"])) {
-                $html .= self::$RewriteFormElements["Select"]($attr);
+                $html = self::$RewriteFormElements["Select"]($attr);
             } else {
-                $isInvalid = (bool)($attr['isInvalid'] ?? false);
-                $isRequired = (bool)($attr['isRequired'] ?? false);
-                $isReadOnly = (bool)($attr['isReadOnly'] ?? false);
-                $html .= '<div class="form-control form-select' . ($isInvalid ? ' invalid' : '') . '">';
+                $html .= '<div class="form-control form-select' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
                 $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
-                $html .= '<select ' . $attr['chain'] . ' ' . ($isRequired ? 'required' : '') . ' ' . ($isReadOnly ? 'readonly' : '') . '>';
+                $html .= '<select ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' />';
                 if (!empty($attr['data'])) {
-                    $selected = $attr['selected'] ?? null;
                     foreach ($attr['data'] as $value => $title) {
-                        $html .= '<option value="' . $value . '" ' . (($selected !== null && $selected == $value) ? 'selected' : '') . '>' . $title . '</option>';
+                        $html .= '<option value="' . $value . '" ' . ((!empty($attr['selected']) && $attr['selected'] == $value) ? 'selected' : '') . '>' . $title . '</option>';
                     }
                 }
                 $html .= '</select>';
@@ -700,7 +700,7 @@ class forms extends polymorphismPattern implements formsInterface
                 $html .= '</div>';
             }
         } else {
-            $html .= $select;
+            $html = $select;
         }
     }
 
@@ -714,19 +714,15 @@ class forms extends polymorphismPattern implements formsInterface
         $radio = $this->renderBlock('render_Radio', $attr);
         if (empty($radio)) {
             if (isset(self::$RewriteFormElements["Radio"])) {
-                $html .= self::$RewriteFormElements["Radio"]($attr);
+                $html = self::$RewriteFormElements["Radio"]($attr);
             } else {
-                $isInvalid = (bool)($attr['isInvalid'] ?? false);
-                $html .= '<div class="form-control' . ($isInvalid ? ' invalid' : '') . '">';
-
+                $html .= '<div class="form-control' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
 
                 $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
                 if (!empty($attr['data'])) {
-                    $selected = $attr['selected'] ?? null;
-                    $name = $attr['name'] ?? '';
                     foreach ($attr['data'] as $value => $title) {
                         $html .= '<div class="form-radio">';
-                        $html .= '<input name="' . $name . '" type="radio" value="' . $value . '" ' . (($selected !== null && $selected == $value) ? 'checked' : '') . ' />' . $title;
+                        $html .= '<input name="' . $attr['name'] . '" type="radio" value="' . $value . '" ' . (($attr['selected'] == $value) ? 'checked' : '') . ' />' . $title;
                         $html .= '</div>';
                     }
                 }
@@ -735,7 +731,7 @@ class forms extends polymorphismPattern implements formsInterface
                 $html .= '</div>';
             }
         } else {
-            $html .= $radio;
+            $html = $radio;
         }
     }
 
@@ -749,22 +745,16 @@ class forms extends polymorphismPattern implements formsInterface
         $checkbox = $this->renderBlock('render_Checkbox', $attr);
         if (empty($checkbox)) {
             if (isset(self::$RewriteFormElements["Checkbox"])) {
-                $html .= self::$RewriteFormElements["Checkbox"]($attr);
+                $html = self::$RewriteFormElements["Checkbox"]($attr);
             } else {
-                $isInvalid = (bool)($attr['isInvalid'] ?? false);
-                $isRequired = (bool)($attr['isRequired'] ?? false);
-                $isReadOnly = (bool)($attr['isReadOnly'] ?? false);
-                $isChecked = (bool)($attr['isChecked'] ?? false);
-
                 $html .= '<div class="form-control form-checkbox' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
-                $html .= '<div class="form-control form-checkbox' . ($isInvalid ? ' invalid' : '') . '">';
-                $html .= '<input type="checkbox" ' . $attr['chain'] . ' ' . ($isRequired ? 'required' : '') . ' ' . ($isReadOnly ? 'readonly' : '') . ' ' . ($isChecked ? 'checked' : '') . ' />';
+                $html .= '<input type="checkbox" ' . $attr['chain'] . ' ' . ($attr['isRequired'] ? 'required' : '') . ' ' . ($attr['isReadOnly'] ? 'readonly' : '') . ' ' . ($attr['isChecked'] ? 'checked' : '') . ' />';
                 $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
                 $html .= $this->displayInfoAndError($attr);
                 $html .= '</div>';
             }
         } else {
-            $html .= $checkbox;
+            $html = $checkbox;
         }
     }
 
@@ -776,11 +766,11 @@ class forms extends polymorphismPattern implements formsInterface
     function displayInfoAndError(array $attr): string
     {
         $html = '';
-        if (!empty($attr['isInvalid']) && !empty($attr['error'])) {
+        if ($attr['isInvalid'] && !empty($attr['error'])) {
             $html .= '<span class="error">' . $attr['error'] . '</span>';
         }
 
-        if (!empty($attr['info'])) {
+        if ($attr['info'] ?? false) {
             $html .= '<span class="info">' . $attr['info'] . '</span>';
         }
         return $html;
@@ -1019,8 +1009,7 @@ class templateMacros extends forms implements templateMacrosInterface
 
         } else {
 
-            $method = debug_backtrace()[0];
-            throw new Exception($method);
+            throw new Exception(debug_backtrace()[0]);
 
         }
 
@@ -1068,14 +1057,14 @@ class templateMacros extends forms implements templateMacrosInterface
      */
     public function HtmlChars(string $value): string
     {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($value);
     }
 
     public function IsActive(string $url): string
     {
         $url = trim($url, "/");
 
-        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+        $uri = $_SERVER['REQUEST_URI'];
         $path = parse_url($uri, PHP_URL_PATH);
         $segments = explode('/', trim($path, '/'));
 
@@ -1122,8 +1111,7 @@ class templateMacros extends forms implements templateMacrosInterface
      */
     public function Trunc(string $value, int $num): string
     {
-        $v = strip_tags($value);
-        return function_exists('mb_substr') ? mb_substr($v, 0, $num, 'UTF-8') : substr($v, 0, $num);
+        return substr(strip_tags($value), 0, $num);
     }
 
     /**
@@ -1160,8 +1148,7 @@ class templateMacros extends forms implements templateMacrosInterface
      */
     public function DateFormat(string $date, string $format = 'Y-m-d H:i:s'): string
     {
-        $ts = strtotime($date);
-        return $ts ? date($format, $ts) : $date;
+        return date($format, strtotime($date));
     }
 
     /**
@@ -1316,6 +1303,10 @@ class Loader extends templateMacros implements TemplateInterface
      */
     public mixed $val;
     /**
+     * @var mixed|string
+     */
+    protected string $workingDirectory;
+    /**
      * @var array
      */
     private array $workingFiles;
@@ -1384,48 +1375,57 @@ class Loader extends templateMacros implements TemplateInterface
         return preg_replace('"/+"', '/', workingDirectory . DIRECTORY_SEPARATOR . trim(preg_replace('/^(\.\.\/|\.\/)/', '', ($path)), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
     }
 
-    /**
-     * @return void
-     */
     public function setupDirectories(): void
     {
-        if (!is_dir($this->cacheDirectory)) {
-            if (!@mkdir($this->cacheDirectory, 0755, true)) {
+        if (PHP_OS === "Linux" || PHP_OS === "Darwin") {
+            $fileOwnerInfo = posix_getpwuid(fileowner(workingDirectory))['name'];
+            $currentUserName = posix_getpwuid(posix_geteuid())['name'];
+
+            if ($fileOwnerInfo !== $currentUserName) {
                 $this->errors(500, [
-                    '<h1>Cache directory not writable</h1>',
-                    'Unable to create: <code>' . $this->cacheDirectory . '</code>'
+                    'title' => '<h1>Ownership Change Required</h1>',
+                    'content' => '
+                        Please change the files and directories owner.
+                        <br />
+                        <strong>You can use the next source code in your project directory</strong>
+<pre>
+<code>
+    #!/bin/bash
+    OS=$(uname)
+    if [ "$OS" = "Linux" ]; then
+        chown -R www-data:www-data $(pwd)
+        chmod -R 755 $(pwd)
+    elif [ "$OS" = "Darwin" ]; then
+        chown -R $(whoami):staff $(pwd)
+        chmod -R 755 $(pwd)
+    fi
+    </code>
+</pre>
+                       ',
                 ]);
+                exit;
             }
         }
 
-        if (!is_writable($this->cacheDirectory)) {
-            $this->errors(500, [
-                '<h1>Cache directory not writable</h1>',
-                'Directory exists but is not writable: <code>' . $this->cacheDirectory . '</code>'
-            ]);
+        if (!is_writable(getcwd())) {
+            chmod(getcwd(), 0755);
+        }
+
+        if (!is_dir($this->cacheDirectory)) {
+            mkdir($this->cacheDirectory, 0755);
         }
 
         if (!is_dir($this->workingDirectory)) {
-            if (!@mkdir($this->workingDirectory, 0755, true)) {
-                $this->errors(500, [
-                    '<h1>Views directory not writable</h1>',
-                    'Unable to create: <code>' . $this->workingDirectory . '</code>'
-                ]);
-            }
+            mkdir($this->workingDirectory, 0755);
         }
 
-        if (!is_writable($this->workingDirectory)) {
-            $this->errors(500, [
-                '<h1>Views directory not writable</h1>',
-                'Directory exists but is not writable: <code>' . $this->workingDirectory . '</code>'
-            ]);
-        }
+        chmod($this->cacheDirectory, 0755);
+        chmod($this->workingDirectory, 0755);
     }
 
     /**
      * @param bool $parseFiles
      * @return void
-     * @throws Exception
      */
     public function createCache(bool $parseFiles = false): void
     {
@@ -1453,8 +1453,7 @@ class Loader extends templateMacros implements TemplateInterface
                 $err[] = $file . ' file does not exist!<br />';
             } else {
 
-                $content = @file_get_contents($fullPath);
-                preg_match('/\/\*filename:(.*?)\*\//s', $content ?: '', $m);
+                $content = file_get_contents($fullPath);
 
                 foreach (['pre', 'script', 'noscript', 'style'] as $val) {
                     /**
@@ -1842,6 +1841,7 @@ class Loader extends templateMacros implements TemplateInterface
             $m[3] = $m[3] ?? "''";
 
             $replaceSingleQuotes = ['\'' => "\\'"];
+
             foreach ($m as $key => $value) {
 
                 $value = trim($value);
@@ -2088,7 +2088,7 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private function createClassNameFromFileName(string $fileName): string
     {
-        return 'renderer_' . trim(preg_replace('/(\.html|\.tpl)$|[^\w+]/', '_', $fileName), '_');
+        return 'renderer_' . trim(preg_replace('/.html|.tpl$|[^\w+]/', '_', $fileName), '_');
     }
 
     /**
@@ -2096,7 +2096,6 @@ class Loader extends templateMacros implements TemplateInterface
      * @param bool $parseFiles
      * @param array $excludedSource
      * @return void
-     * @throws Exception
      */
     private function parseFileContents(array $fileContents, bool $parseFiles, array $excludedSource): void
     {
@@ -2191,37 +2190,8 @@ class Loader extends templateMacros implements TemplateInterface
                 $fn = strtr($fn, $excludedSource);
 
                 file_put_contents($cacheFilePath, $fn);
-                $this->safeWriteCache($cacheFilePath, $fn);
             }
         }
-    }
-
-    /**
-     * @param string $cacheFilePath
-     * @param string $content
-     * @return void
-     * @throws Exception
-     */
-    private function safeWriteCache(string $cacheFilePath, string $content): void
-    {
-        $tmpFile = $cacheFilePath . '.' . uniqid('', true) . '.tmp';
-
-        $fp = fopen($tmpFile, 'wb');
-        if (!$fp) {
-            throw new Exception("Cannot create cache file: $tmpFile");
-        }
-
-        if (!flock($fp, LOCK_EX)) {
-            fclose($fp);
-            throw new Exception("Cannot lock temp cache file: $tmpFile");
-        }
-
-        fwrite($fp, $content);
-        fflush($fp);
-        flock($fp, LOCK_UN);
-        fclose($fp);
-
-        rename($tmpFile, $cacheFilePath);
     }
 
     /**
@@ -2252,18 +2222,18 @@ class Loader extends templateMacros implements TemplateInterface
             foreach ($routes as $route => $templates) {
                 if ($route === '*') continue;
 
-                $expanded = [];
                 foreach ($templates as $value) {
                     if (preg_match('/\*\.(\S+)$/', $value)) {
-                        $files = glob($this->workingDirectory . $value) ?: [];
+
+                        $files = glob($this->workingDirectory . $value);
+                        $templates = [];
                         foreach ($files as $file) {
-                            $expanded[] = str_replace($this->workingDirectory, '', $file);
+                            $templates[] = str_replace($this->workingDirectory, '', $file);
                         }
-                    } else {
-                        $expanded[] = $value;
                     }
                 }
-                $routes[$route] = array_values(array_unique(array_merge($routes['*'], $expanded)));
+
+                $routes[$route] = array_values(array_unique(array_merge($routes['*'], $templates)));
             }
         }
 
@@ -2308,7 +2278,7 @@ class Loader extends templateMacros implements TemplateInterface
     {
         if (empty($this->workingUrl)) {
 
-            $uri = $_SERVER['REQUEST_URI'] ?? '/';
+            $uri = $_SERVER['REQUEST_URI'];
             $path = parse_url($uri, PHP_URL_PATH) ?? '/';
             $segments = explode('/', trim($path, '/'));
 
@@ -2333,7 +2303,7 @@ class Loader extends templateMacros implements TemplateInterface
             $scheme = $_SERVER['REQUEST_SCHEME'];
         }
 
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $host = $_SERVER['HTTP_HOST'];
 
         return $scheme . '://' . $host . '/';
     }
@@ -2343,12 +2313,6 @@ class Loader extends templateMacros implements TemplateInterface
      */
     private function gettingWorkingFiles(): array
     {
-        if (!defined('workingDirectory')) {
-            $this->errors(404, [
-                '500 | Working directory is not set'
-            ]);
-        }
-
         if (empty($this->workingFiles) && isset($this->workingUrl)) {
 
             return $this->routes[$this->workingUrl] ?? [];
@@ -2461,7 +2425,7 @@ class Loader extends templateMacros implements TemplateInterface
             if (method_exists($instance, $methodName)) {
                 if (in_array($methodName, ['render_Input', 'render_Textarea', 'render_Select', 'render_Radio', 'render_Checkbox'])) {
 
-                    foreach (['isHidden', 'chain', 'isInvalid', 'label', 'isRequired', 'isReadOnly', 'error', 'info', 'value', 'data', 'title', 'selected', 'name', 'checked', 'isChecked', 'ref', 'aria-label'] as $n) {
+                    foreach (['isHidden', 'chain', 'isInvalid', 'label', 'isRequired', 'isReadOnly', 'error', 'info', 'value', 'data', 'title', 'selected', 'name', 'checked', 'isChecked', 'ref', 'arial-label'] as $n) {
                         $instance->val[$n] = null;
                     }
                 }
