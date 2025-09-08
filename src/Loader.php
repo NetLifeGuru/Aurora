@@ -756,7 +756,6 @@ class forms extends polymorphismPattern implements formsInterface
                 $isReadOnly = (bool)($attr['isReadOnly'] ?? false);
                 $isChecked = (bool)($attr['isChecked'] ?? false);
 
-                $html .= '<div class="form-control form-checkbox' . ($attr['isInvalid'] ? ' invalid' : '') . '">';
                 $html .= '<div class="form-control form-checkbox' . ($isInvalid ? ' invalid' : '') . '">';
                 $html .= '<input type="checkbox" ' . $attr['chain'] . ' ' . ($isRequired ? 'required' : '') . ' ' . ($isReadOnly ? 'readonly' : '') . ' ' . ($isChecked ? 'checked' : '') . ' />';
                 $html .= '<label>' . ($attr['label'] ?? '') . ($attr['isRequired'] ? '<span class="asterisk">*</span>' : '') . '</label>';
